@@ -1,24 +1,16 @@
-%% initialize pathes home PC
-
-
-addpath(genpath('D:/Dropbox/XZ_projects/ToolBoxes/MiniscopeAnalysis'),...
-    genpath('D:/Dropbox/XZ_projects/ToolBoxes/CNMFE/CNMF_E'),...
-    genpath('D:/Dropbox/XZ_projects/ToolBoxes/NoRMCorre'),...
-    genpath('D:/Dropbox/XZ_projects/MatlabScripts'));
-
-
-addpath(genpath('D:/Dropbox/XZ_projects/ToolBoxes/Behav_toolbox'),...
-    genpath('D:/Dropbox/XZ_projects/ToolBoxes/mmread'));
-
 %% initialize pathes lab PC
+% edit to add path to 
+% msRun2018, CNMF_E, NoRMCorre
+xz_folder = fileparts(mfilename('fullpath'));
+
+
 addpath(genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/MiniscopeAnalysis'),...
     genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/CNMFE/CNMF_E'),...
     genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/NoRMCorre'),...
     genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/MatlabScripts'));
 
 
-addpath(genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/Behav_toolbox'),...
-    genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/mmread'));
+
 %%
 % Processing based on msRun2018;
 %%
@@ -29,16 +21,9 @@ if ispc
 else
     separator = '/'; % For unix (mac, linux) operating systems
 end
-%% for new viersion miniscope software, RGB avi is produced
-% convert the video to gray scale
+%% if RGB avi is produced convert the video to gray scale
 
 aviRGBtoGray();
-
-
-%% rename to start from 0 (optional)
-
-
-
 
 %% Parameters
 spatial_downsampling = 2; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
