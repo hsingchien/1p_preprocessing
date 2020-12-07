@@ -1,13 +1,4 @@
-%% initialize pathes lab PC
-% edit to add path to 
-% msRun2018, CNMF_E, NoRMCorre
-xz_folder = fileparts(mfilename('fullpath'));
-
-
-addpath(genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/MiniscopeAnalysis'),...
-    genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/CNMFE/CNMF_E'),...
-    genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes/NoRMCorre'),...
-    genpath('C:/Users/HonglabUser/Dropbox/XZ_projects/MatlabScripts'));
+%% Run Initialize first to add pathes to necessary toolboxes
 
 
 
