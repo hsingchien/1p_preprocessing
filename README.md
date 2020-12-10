@@ -2,7 +2,7 @@
 preprocessing for 1p imaging
 
 ## CellScreener.mlapp quickstart guide
-1. click 'load V(mat/avi)' button, select .mat or .avi file of neuron recording, open. loading will take some moments. current version video file is loaded to memory for quick access.  
+1. click 'load V(mat/avi)' button, select .mat or .avi file of neuron recording, open. loading will take some moments. current version video file is loaded to memory for quick access. Change view by selecting 'Raw'. 'dF/F' and 'maxproj' in the dropdown manu. 
 
 2. click load ms.mat, select ms.mat output from the cell extraction preprocessing you like. Use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to ms file.  
 **minimum requirement for ms.mat**  
@@ -19,8 +19,8 @@ ms.ds ----- downsample ration. set this to 1 if no downsample is performed.
 
 5. Select a cell in list 1, click Sort_ROI, list 2 will be sorted by their distance to the cell in list 1. Footprint overlap and temporal correlation will be shown on the right of the traces. 
 
-6. Press 'g' to keep/reject cell selected in list 1. Press 'h' to keep/reject cell selected in list 2. Make sure GUI instead of individua components is selected. Rejected ROI will become red in maxprojection image. Keep/reject statuses are shown for both cells. Click 'Save' to save. keep/reject will be saved in ms.cell_label, 1 = keep, 0 = reject.  
+6. Press 'g' to keep/reject cell selected in list 1. Press 'h' to keep/reject cell selected in list 2. Make sure GUI instead of individua components is selected when pressing these keys. Rejected ROI will become red in maxprojection image. Keep/reject statuses are shown for both cells. Click 'Save' to save. keep/reject will be saved in ms.cell_label, 1 = keep, 0 = reject.  
 
-7. 'RasterVideo' button will generate a raster video. Hit 'Play' to play the video.
+7. 'RasterVideo' button will generate a raster video. Hit 'Play' to quick play the video. Left/Right key will move current frame by step. 'Step' sets the step size of Left/Right keypressing as well as video play.
 
  
