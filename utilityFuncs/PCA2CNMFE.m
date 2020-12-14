@@ -1,3 +1,5 @@
+function PCA2CNMFE(dir_f)
+
 % navigate to the folder contain all experiment folders
 % each experiment folder contain these files: ***cellBounds.mat, ***dataMat
 % cellBounds contain roi contours
@@ -6,8 +8,7 @@
 % Change the directory
 % This will pull out all *cellBounds.mat files (contains PCA/ICA
 % footprints)
-% cbfs = dir('D:\Xingjian\SH_subpop\CMK\**\*cellBounds.mat');
-load('msCam_data_processed.mat');
+cbfs = dir([dir_f,'\**\*cellBounds.mat']);
 
 
 sep = '\';
@@ -22,18 +23,21 @@ for i = 1:length(cbfs)
     ms = struct();
 
     ms.dirName = fileparts([cbfs(i).folder, sep, cbfs(i).name]);
-    vsiz = size(imax);
-    rois = reshape(roifn,vsiz(1), vsiz(2), []); 
-    ms.SFPs = rois;
-    ms.numNeurons = size(roifn,2);
-    ms.FiltTraces = sigfn';
-    ms.RawTraces = sigfn';
-%     ms.CorrProj = zeros(size(cellBounds{1}));
-    ms.numFrames = size(sigfn,2);
-    ms.height = vsiz(1);
-    ms.width = vsiz(2);
-    ms.ds = 1;
-    ms.Centroids = [];
+
+    SFPs = zeros([size(cellBounds{1}), length(cellBounds)]);
+    for j = 1:length(cellBounds)
+        SFPs(:,:,j) = cellBounds{j};
+    end
+    ms.SFPs = SFPs;
+    ms.numNeurons = length(cellBounds);
+    ms.FiltTraces = dataMat;
+    ms.RawTraces = dataMat;
+    ms.CorrProj = zeros(size(cellBounds{1}));
+    ms.numFrames = size(dataMat,1);
+    ms.height = size(SFPs, 1);
+    ms.width = size(SFPs, 2);
+    ms.ds = 0;
+    ms.Centroids = 0;
     ms.roi_pos_ds = [];
     ms.roi_pos_full = [];
     ms.frameNum = 1:ms.numFrames;
@@ -43,4 +47,5 @@ for i = 1:length(cbfs)
     ms.S = [];
     save([cbfs(i).folder, sep,'ms_PCA.mat'], 'ms');
     
+end
 end
