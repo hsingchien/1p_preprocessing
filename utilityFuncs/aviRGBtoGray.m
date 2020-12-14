@@ -1,4 +1,4 @@
-function aviRGBtoGray(dir_f, tar_dir, prefw)
+function aviRGBtoGray(dir_f, tar_dir, prefr, prefw)
 % aviRGBtoGray(dir_f, tar_dir, prefw)
 % input: 
 % dir_f, directory of target video files, default .avi files named in order
@@ -32,7 +32,7 @@ end
 
     %% set the useful constants
     %%
-    all_v = dir(strcat(dir_f, '/*.avi')); % all_v is a numFile x 1 struct with field name, folder, date, bytes, isdir, datenum
+    all_v = dir([dir_f, '/',prefr,'*.avi']); % all_v is a numFile x 1 struct with field name, folder, date, bytes, isdir, datenum
     % sort files by name, 0, 1, 2, 3, etc.
     avi_cell = struct2cell(all_v); % convert to cell, 6 x numFile
     avi_names = avi_cell(find(strcmp(fields(all_v), 'name')), :);
@@ -47,10 +47,10 @@ end
     all_v = all_v(forder); % reorder the struct to the video order
     avi_names = avi_names(forder);
     %% start read each avi by order and combine them into 1 giant .mat file
-    parfor i = 1:length(avi_names)
+    for i = 1:length(avi_names)
         fprintf('now converting file %s', avi_names{i});
         tic;
-        vid = VideoReader(avi_names{i});
+        vid = VideoReader([dir_f,'/',avi_names{i}]);
         this_v = zeros(vid.Height, vid.Width, vid.NumFrames);
         vidw = VideoWriter(strcat(tar_dir, prefw, avi_names{i}), 'Grayscale AVI');
         open(vidw);
