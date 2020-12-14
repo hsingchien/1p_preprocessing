@@ -1,4 +1,5 @@
 function aviRGBtoGray(dir_f, tar_dir, prefw)
+% aviRGBtoGray(dir_f, tar_dir, prefw)
 % input: 
 % dir_f, directory of target video files, default .avi files named in order
 % tar_dir, director to save the converted grayscale videos. 
