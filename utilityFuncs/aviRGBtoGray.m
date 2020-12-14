@@ -1,4 +1,5 @@
 function aviRGBtoGray(dir_f, tar_dir, prefw)
+% aviRGBtoGray(dir_f, tar_dir, prefw)
 % input: 
 % dir_f, directory of target video files, default .avi files named in order
 % tar_dir, director to save the converted grayscale videos. 
@@ -38,13 +39,15 @@ end
     avi_id_list = [];
     for i = 1:length(avi_names)
        temp = split(avi_names{i}, '.');
-       avi_id_list = [avi_id_list, str2num(temp{1})];
+       fname = temp{1};
+       digit_i = regexp(fname, '\d*');
+       avi_id_list = [avi_id_list, str2num(fname(digit_i(end):end))];
     end
     [~, forder] = sort(avi_id_list);
     all_v = all_v(forder); % reorder the struct to the video order
     avi_names = avi_names(forder);
     %% start read each avi by order and combine them into 1 giant .mat file
-    for i = 1:length(avi_names)
+    parfor i = 1:length(avi_names)
         fprintf('now converting file %s', avi_names{i});
         tic;
         vid = VideoReader(avi_names{i});

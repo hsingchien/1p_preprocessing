@@ -1,11 +1,12 @@
 function vmat_total = VideoCombine(dir_f, vtype, sa)
 % input: 
+% VideoCombine(dir_f, vtype, sa)
 % dir_f, directory of target video files, default .avi files named in order
 % starting from 0. 
 % sa, save or not, default false
 
 if nargin < 2
-    vtype = 'b';
+    vtype = 'm';
     sa = false;
 elseif nargin < 3
     sa = false;
@@ -25,7 +26,9 @@ end
     avi_id_list = [];
     for i = 1:length(avi_names)
        temp = split(avi_names{i}, '.');
-       avi_id_list = [avi_id_list, str2num(temp{1})];
+       fname = temp{1};
+       digit_i = regexp(fname, '\d*');
+       avi_id_list = [avi_id_list, str2num(fname(digit_i(end):end))];
     end
     [~, forder] = sort(avi_id_list);
     all_v = all_v(forder); % reorder the struct to the video order
