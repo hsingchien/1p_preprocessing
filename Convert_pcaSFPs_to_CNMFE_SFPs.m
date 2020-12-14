@@ -2,8 +2,13 @@
 % each experiment folder contain these files: ***cellBounds.mat, ***dataMat
 % cellBounds contain roi contours
 % dataMat contains the extracted raw traces
-% 
+%
+% Change the directory
+% This will pull out all *cellBounds.mat files (contains PCA/ICA
+% footprints)
 cbfs = dir('D:\Xingjian\SH_subpop\CMK\**\*cellBounds.mat');
+
+
 sep = '\';
 for i = 1:length(cbfs)
     
