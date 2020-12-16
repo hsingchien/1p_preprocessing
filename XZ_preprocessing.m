@@ -14,7 +14,7 @@ else
 end
 %% if RGB avi is produced convert the video to gray scale
 
-aviRGBtoGray();
+aviRGBtoGray(pwd, '', 'msCam', '');
 
 %% Parameters
 spatial_downsampling = 2; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
@@ -45,7 +45,7 @@ ms = msNormCorre(ms,isnonrigid);
 %% 3.a - Crop
 % show correlation image 
 happy = false;
-vid_temp = VideoReader([ms.dirName separator ms.analysis_time separator 'msvideo.avi']);
+vid_temp = VideoReader([ms.dirName separator ms.analysis_time separator 'msvideo_full.avi']);
 vmat_temp = read(vid_temp);
 T_temp = vid_temp.NumFrames;
 delete(vid_temp);
@@ -130,7 +130,7 @@ ms.meanFrame = ms.meanFrame(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(ms.mean
 vmat_temp = squeeze(vmat_temp);
 vmat_temp = vmat_temp(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(vmat_temp,1)), roi_pos(1):min(size(vmat_temp,2), roi_pos(1)+roi_pos(3)-1),:);
 
-movefile([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], [ms.dirName separator ms.analysis_time separator 'old_msvideo.avi'], 'f');
+% movefile([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], [ms.dirName separator ms.analysis_time separator 'old_msvideo.avi'], 'f');
 viw = VideoWriter([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], 'Grayscale AVI');
 open(viw);
 for i = 1:size(vmat_temp,3)
