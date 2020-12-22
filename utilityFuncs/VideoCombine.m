@@ -1,15 +1,23 @@
-function vmat_total = VideoCombine(dir_f, vtype, sa)
+function vmat_total = VideoCombine(dir_f, vtype, sa, savetype)
 % input: 
 % VideoCombine(dir_f, vtype, sa)
 % dir_f, directory of target video files, default .avi files named in order
 % starting from 0. 
 % sa, save or not, default false
-
+% vtype, 'mat' or 'avi'
 if nargin < 2
     vtype = 'm';
     sa = false;
+    savetype = 'mat';
 elseif nargin < 3
     sa = false;
+    savetype = 'mat';
+elseif nargin < 4
+    if strcmp(vtype, 'm')
+        savetype = 'mat';
+    else
+        savetype = 'avi';
+    end
 end
 
 if ~(strcmp(vtype, 'b') | strcmp(vtype, 'm'))
@@ -64,7 +72,27 @@ end
     end
     if sa
         fprintf('saving to .mat file at %s...\n', dir_f);
-        save(strcat(dir_f, '/video_total.mat'), 'vmat_total');
+        if strcmp(savetype, 'mat')
+            if strcmp(vtype, 'm')
+                save(strcat(dir_f, '/video_total.mat'), 'vmat_total');
+            else
+                save(strcat(dir_f, '/behav_video.mat'),'vmat_total');
+            end
+        elseif strcmp(savetype, 'avi')
+            if strcmp(vtype, 'm')
+                viw = VideoWriter([dir_f '/msvideo.avi'], 'Grayscale AVI');
+            else
+                viw = VideoWriter([dir_f '/behav_video.avi'], 'Grayscale AVI');
+            end
+            open(viw);
+            for i = 1:size(vmat_total,3)
+                writeVideo(viw, vmat_total(:,:,i));
+            end
+            close(viw);
+            delete(viw);
+        else
+            error('output video type not valid')
+        end
     else
         fprintf('combined video not saved\n');
     end

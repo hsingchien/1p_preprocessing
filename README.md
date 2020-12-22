@@ -6,9 +6,9 @@ preprocessing for 1p imaging
 
 2. click load ms.mat, select ms.mat output from the cell extraction preprocessing you like. Use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to ms file.  
 **minimum requirement for ms.mat**  
-ms.SFPs ------ Footprints of all ROIs, height x width x n_ROIs  
-ms.RawTraces ------ Temporal traces of all ROIs, n_time_points x n_ROIs  
-ms.FiltTraces ------ Filtered temporal traces of all ROIs, n_time_points x n_ROIs. This is only different from RawTraces when deconvolution is performed. Make this a copy of RawTraces if deconvoluted traces are not available  
+ms.SFPs ------ Footprints of all ROIs, **height x width x n_ROIs**  
+ms.RawTraces ------ Temporal traces of all ROIs, **n_time_points x n_ROIs**  
+ms.FiltTraces ------ Filtered temporal traces of all ROIs, **n_time_points x n_ROIs**. This is only different from RawTraces when deconvolution is performed. Make this a copy of RawTraces if deconvoluted traces are not available  
 ms.ds ----- downsample ration. set this to 1 if no downsample is performed.   
 
 **CellScreener can handle simple scenarios such as SFP is downsampled from video or SFP is cropped out of video (ms.roi_pos is required to map SFP back to video), but it will throw an error if mismatch is caused by both downsampling and cropping (SFP relative to video). It is recommended to always make SFP and video dimension match**  
