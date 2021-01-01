@@ -1,4 +1,4 @@
-function Min1pipe2CNMFE(dir_f)    
+function msMin1pipe2CNMFE(dir_f)    
     % Minipipe2CNMFE(dir_f) 
     % dir_f: directory containing all min1pipe.m output '*_data_processed.mat'
     

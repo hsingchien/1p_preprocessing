@@ -1,4 +1,4 @@
-function PCA2CNMFE(dir_f)
+function msPCA2CNMFE(dir_f)
 
 % navigate to the folder contain all experiment folders
 % each experiment folder contain these files: ***cellBounds.mat, ***dataMat
