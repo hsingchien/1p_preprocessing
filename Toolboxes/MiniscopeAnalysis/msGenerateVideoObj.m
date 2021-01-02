@@ -36,8 +36,8 @@ function ms = msGenerateVideoObj(dirName, filePrefix, type)
     %generate a vidObj for each video file. Also calculate total frames
         for i=1:ms.numFiles
     %         [folder filesep num2str(filePrefix) num2str(i) '.avi']
-%             ms.vidObj{i} = VideoReader([dirName filesep num2str(filePrefix) num2str(i-1) '.avi']); % start from 0
-            ms.vidObj{i} = VideoReader([dirName filesep num2str(filePrefix) num2str(i) '.avi']); % XZ 11222020
+            ms.vidObj{i} = VideoReader([dirName filesep num2str(filePrefix) num2str(i-1) '.avi']); % start from 0
+%             ms.vidObj{i} = VideoReader([dirName filesep num2str(filePrefix) num2str(i) '.avi']); % XZ 11222020
             ms.vidNum = [ms.vidNum i*ones(1,ms.vidObj{i}.NumberOfFrames)];
             ms.frameNum = [ms.frameNum 1:ms.vidObj{i}.NumberOfFrames];
             ms.numFrames = ms.numFrames + ms.vidObj{i}.NumberOfFrames;
