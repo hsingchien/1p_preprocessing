@@ -8,9 +8,9 @@ function ms = msGenerateVideoObj(dirName, filePrefix, type)
     
     % find avi and dat files
     if type == 'avi'
-        aviFiles = dir([dirName filesep '*.avi']);
+        aviFiles = dir([dirName filesep filePrefix '*.avi']);
     elseif type == 'mat'
-        matFiles = dir([dirName filesep '*.mat']);
+        matFiles = dir([dirName filesep filePrefix  '*.mat']);
     end
     datFiles = dir([dirName filesep '*.dat']);
     
@@ -33,11 +33,25 @@ function ms = msGenerateVideoObj(dirName, filePrefix, type)
             end
         end
     
+    avi_cell = struct2cell(aviFiles); % convert to cell, 6 x numFile
+    avi_names = avi_cell(find(strcmp(fields(aviFiles), 'name')), :);
+    avi_id_list = [];
+        
+    for i = 1:length(avi_names)
+       temp = split(avi_names{i}, '.');
+       fname = temp{1};
+       digit_i = regexp(fname, '\d*');
+       avi_id_list = [avi_id_list, str2num(fname(digit_i(end):end))];
+    end   
+    
+    [~, forder] = sort(avi_id_list);
+    aviFiles = aviFiles(forder); % reorder the struct to the video order
+    avi_names = avi_names(forder);
+        
     %generate a vidObj for each video file. Also calculate total frames
-        for i=1:ms.numFiles
+        for i=1:length(avi_names)
     %         [folder filesep num2str(filePrefix) num2str(i) '.avi']
-            ms.vidObj{i} = VideoReader([dirName filesep num2str(filePrefix) num2str(i-1) '.avi']); % start from 0
-%             ms.vidObj{i} = VideoReader([dirName filesep num2str(filePrefix) num2str(i) '.avi']); % XZ 11222020
+            ms.vidObj{i} = VideoReader([dirName filesep avi_names{i}]);
             ms.vidNum = [ms.vidNum i*ones(1,ms.vidObj{i}.NumberOfFrames)];
             ms.frameNum = [ms.frameNum 1:ms.vidObj{i}.NumberOfFrames];
             ms.numFrames = ms.numFrames + ms.vidObj{i}.NumberOfFrames;

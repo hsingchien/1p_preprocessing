@@ -3,8 +3,10 @@ function vmat_total = VideoCombine(dir_f, vtype, sa, savetype)
 % VideoCombine(dir_f, vtype, sa)
 % dir_f, directory of target video files, default .avi files named in order
 % starting from 0. 
-% sa, save or not, default false
 % vtype, 'mat' or 'avi'
+% sa, save or not, default false
+% savetype, output file type, 'avi' or 'mat'
+
 if nargin < 2
     vtype = 'm';
     sa = false;
@@ -22,6 +24,10 @@ end
 
 if ~(strcmp(vtype, 'b') | strcmp(vtype, 'm'))
     error('invalid video type. b for behavior, m for miniscope');
+end
+
+if ~(strcmp(savetype, 'avi') | strcmp(savetype, 'mat'))
+    error('invalid saving type');
 end
 
     %% set the useful constants
@@ -78,7 +84,7 @@ end
             else
                 save(strcat(dir_f, '/behav_video.mat'),'vmat_total');
             end
-        elseif strcmp(savetype, 'avi')
+        else
             if strcmp(vtype, 'm')
                 viw = VideoWriter([dir_f '/msvideo.avi'], 'Grayscale AVI');
             else
@@ -90,8 +96,6 @@ end
             end
             close(viw);
             delete(viw);
-        else
-            error('output video type not valid')
         end
     else
         fprintf('combined video not saved\n');
