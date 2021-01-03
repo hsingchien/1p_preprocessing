@@ -72,18 +72,18 @@ merge_thr = 0.65;     % thresholds for merging neurons; [spatial overlap ratio, 
 method_dist = 'max';   % method for computing neuron distances {'mean', 'max'}
 dmin = 5;       % minimum distances between two neurons. it is used together with merge_thr
 dmin_only = 2;  % merge neurons if their distances are smaller than dmin_only.
-merge_thr_spatial = [0.8, 0.4, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
+merge_thr_spatial = [0.8, 0.2, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible.
-min_corr = 0.5;     % minimum local correlation for a seeding pixel, default 0.8
-min_pnr = 5;       % minimum peak-to-noise ratio for a seeding pixel
+min_corr = 0.65;     % minimum local correlation for a seeding pixel, default 0.8
+min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = gSig^2;      % minimum number of nonzero pixels for each neuron
 bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames
 save_initialization = false;    % save the initialization procedure as a video.
 use_parallel = true;    % use parallel computation for parallel computing
-show_init = false;   % show initialization results
+show_init = true;   % show initialization results
 choose_params = false; % manually choose parameters
 center_psf = true;  % set the value as true when the background fluctuation is large (usually 1p data)
 % set the value as false when the background fluctuation is small (2p)
