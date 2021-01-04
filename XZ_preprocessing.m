@@ -171,7 +171,7 @@ end
 % get ms output, containing:
 % SFPs, A, neuron contours, 
 % RawTraces, FiltTraces, C, raw signals of each neuron, stored in 
-%% plut ms into cnn classifier, adjust thereshold to do preliminary cleaning
+%% OPTIONAL put ms into cnn classifier, adjust thereshold to do preliminary cleaning
 [label, scores] = cnn_classifier(ms, '', 0.03);
 ms.cell_label = label;
 save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
