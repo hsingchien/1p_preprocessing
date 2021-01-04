@@ -77,14 +77,15 @@ end
        delete(v);   
     end
     if sa
-        fprintf('saving to .mat file at %s...\n', dir_f);
         if strcmp(savetype, 'mat')
+            fprintf('saving to .mat file at %s...\n', dir_f);
             if strcmp(vtype, 'm')
                 save(strcat(dir_f, '/video_total.mat'), 'vmat_total');
             else
                 save(strcat(dir_f, '/behav_video.mat'),'vmat_total');
             end
         else
+            fprintf('saving to .avi file at %s...\n', dir_f);
             if strcmp(vtype, 'm')
                 viw = VideoWriter([dir_f '/msvideo.avi'], 'Grayscale AVI');
             else
