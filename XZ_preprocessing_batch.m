@@ -1,6 +1,5 @@
 
 function XZ_preprocessing_batch()
-
 %% Run Initialize first to add pathes to necessary toolboxes
 
 

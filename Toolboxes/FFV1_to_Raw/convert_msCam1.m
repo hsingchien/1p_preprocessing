@@ -4,14 +4,13 @@ function convert_msCam1(filepath)
 % 1. find ffmpegsetup.m, run it
 % 2. in the pop up window, navigate to /ffmpeg-r8/ffmpeg-20200812-4ed6bca-win64-static/ffmpeg-20200812-4ed6bca-win64-static/bin
 % 3. select ffmpeg.exe, click ok
-
 % convert_msCam1({file_path})
 % input is a cell containing all the root directories containing the avi
-% files or the subfolders that contain avi files the function does a 
+% files or the subfolders that contain avi files. the function does a 
 % recursive search of all the subfolders, 2nd order subfolders and so on, 
 % so if you want to convert a bunch of videos, best way is to navigate the 
 % the very root directory, then run convert_msCam1({pwd})
-% output videos will be saved at the /raw fold in the folders of original
+% output videos will be saved at the /raw fold in the same folders of original
 % videos
 
 %% Convert FFV1 AVI to raw AVI, and rename files from multiple sessions to a single folder
