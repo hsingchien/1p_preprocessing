@@ -1,3 +1,7 @@
+%% To use this batch processing script:
+%% place all your 
+
+
 d = dir([pwd,'\**\']);
 d = d([d(:).isdir]);
 idx = [];
@@ -18,7 +22,7 @@ for id = 9:length(d)
     full_path = [d(id).folder,'\',d(id).name];
     cd(full_path);
     pwd
-    XZ_preprocessing();
+    XZ_preprocessing_batch();
     clearvars -except d id idx i full_path
 end
 
