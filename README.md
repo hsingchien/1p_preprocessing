@@ -24,7 +24,7 @@ ms.ds ----- downsample ration. set this to 1 if no downsample is performed.
 7. 'RasterVideo' button will generate a raster video. Hit 'Play' to quick play the video. Left/Right key will move current frame by step. 'Step' sets the step size of Left/Right keypressing as well as video play.
 
 **update 1/6/21**
-1. Now you can switch view of video preview. You can also select to hide all the bad cells. 
+1. Now you can switch view of video preview 2 too. You can also select to hide all the bad cells. 
 2. Click on the contour of the ROI will select that ROI in the cell_list 1. MATLAB app does not support jumping to that cell in the list. The fastest way to identify its ID is to click sort_ROI, the closest ROI will be itself. 
 
  
