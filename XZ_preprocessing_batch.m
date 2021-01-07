@@ -150,7 +150,7 @@ ms = msNormCorre(ms,isnonrigid);
 
 %% 4 - Perform CNMFE
 display('Step 3: CNMFE');
-ms = msRunCNMFE_large(ms);
+ms = msRunCNMFE_large_batch(ms);
 msExtractSFPs(ms); % Extract spatial footprints for subsequent re-alignement
 
 analysis_duration = toc(script_start);
