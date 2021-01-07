@@ -25,14 +25,15 @@ seqIo([seqName],'frImgs',struct('codec','raw'),'aviName',[aviName]);
 behavior_annotator;
 
 %% construct behavior struct
-annot_f = 'behaviorAnnot.txt'
+annot_f = 'XZ38_mouse_present.txt'
 
 A = behaviorData('load', annot_f);
 
 %% construct experiment struct
-expInfo = 'XZ35_mouse_present';
-ms_f1 = strrep('D:\UCLA_data\Miniscope\2020_12_30\XZ35\17_08_56\Miniscope\raw\ms\ms.mat','\','/');
+expInfo = 'XZ38_mouse_present';
+ms_f1 = strrep('D:\Xingjian\MiniscopeData\HC_mouse_presenting\XZ38\17_27_33\Miniscope\raw\ms\ms.mat','\','/');
 ms_f2 = strrep('','\','/');
 E_struct = ExpstructGen(expInfo, ms_f1, ms_f2, A);
+save(strrep('D:\Xingjian\MiniscopeData\HC_mouse_presenting\XZ38\17_27_33\E_struct.mat','\','/'),'E_struct');
 %% Plot all cells with behavior patched
-PlotSelectedCells( E_struct{1}, 100:200, false)
+PlotSelectedCells( E_struct{1}, 1:150, false)

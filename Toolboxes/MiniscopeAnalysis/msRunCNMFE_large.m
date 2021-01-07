@@ -72,7 +72,7 @@ merge_thr = 0.65;     % thresholds for merging neurons; [spatial overlap ratio, 
 method_dist = 'max';   % method for computing neuron distances {'mean', 'max'}
 dmin = 5;       % minimum distances between two neurons. it is used together with merge_thr
 dmin_only = 2;  % merge neurons if their distances are smaller than dmin_only.
-merge_thr_spatial = [0.8, 0.2, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
+merge_thr_spatial = [0.9, 0.1, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible.
@@ -124,7 +124,10 @@ neuron.updateParams('gSig', gSig, ...       % -------- spatial --------
     'bd', bd, ...
     'center_psf', center_psf);
 neuron.Fs = Fs;
-
+%% save a record for key parameters in ms
+ms.CNMFE_params = struct('Fs',Fs, 'tsub', tsub,'deconv',deconv_options,'gSig', gSig, 'gSiz', gSiz,...
+    'nk', nk,'merge_thr', merge_thr,'merge_thr_spatial',merge_thr_spatial,'dmin',dmin,'min_corr',min_corr,...
+    'min_pnr',min_pnr,'min_corr_res',min_corr_res, 'min_pnr_res', min_pnr_res);
 %% distribute data and be ready to run source extraction
 neuron.getReady(pars_envs);
 

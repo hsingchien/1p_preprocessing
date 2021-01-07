@@ -1,3 +1,6 @@
+
+function XZ_preprocessing()
+
 %% Run Initialize first to add pathes to necessary toolboxes
 
 
@@ -14,7 +17,7 @@ else
 end
 %% if RGB avi is produced convert the video to gray scale
 
-aviRGBtoGray(pwd, '', 'msCam', '');
+% aviRGBtoGray(pwd, '', 'msCam', '');
 
 %% Parameters
 spatial_downsampling = 2; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
@@ -44,106 +47,106 @@ ms = msNormCorre(ms,isnonrigid);
 
 %% 3.a - Crop
 % show correlation image 
-happy = false;
-vid_temp = VideoReader([ms.dirName separator ms.analysis_time separator 'msvideo_full.avi']);
-vmat_temp = read(vid_temp);
-T_temp = vid_temp.NumFrames;
-delete(vid_temp);
-
-vmat_temp1 = vmat_temp(:,:,:,round(linspace(1, T_temp, min(T_temp, 1000))));
-vmat_temp1 = squeeze(vmat_temp1);
-opt_temp.d1 = size(vmat_temp1,1);
-opt_temp.d2 = size(vmat_temp1,2);
-opt_temp.gSiz = 7; % edit to match msRunCNMFE_large.m
-opt_temp.gSig = 3;
-opt_temp.center_psf = true;
-[Cn1, PNR1] = correlation_image_endoscope(vmat_temp1, opt_temp);
-
-while ~happy
-    f_temp = figure('position', [10, 500, 1776, 400]);
-    subplot(131);
-    imagesc(Cn1, [0, 1]); colorbar;
-    axis equal off tight;
-    title('correlation image');
-
-    % show peak-to-noise ratio 
-    subplot(132);
-    imagesc(PNR1,[0,max(PNR1(:))*0.98]); colorbar;
-    axis equal off tight;
-    title('peak-to-noise ratio');
-
-    % show pointwise product of correlation image and peak-to-noise ratio 
-    subplot(133);
-    imagesc(Cn1.*PNR1, [0,max(PNR1(:))*0.98]); colorbar;
-    axis equal off tight;
-    title('Cn*PNR');
-
-    roi = drawrectangle(gca);
-    roi_pos = round(roi.Position);
-
-    close(f_temp);
-    vmat_temp2 = vmat_temp1(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(vmat_temp1,1)), roi_pos(1):min(size(vmat_temp1,2), roi_pos(1)+roi_pos(3)-1),:);
-    opt_temp.d1 = size(vmat_temp2,1);
-    opt_temp.d2 = size(vmat_temp2,2);
-    [Cn, PNR] = correlation_image_endoscope(vmat_temp2, opt_temp);
-
-
-    f_temp = figure('position', [10, 500, 1776, 400]);
-    subplot(131);
-    imagesc(Cn, [0, 1]); colorbar;
-    axis equal off tight;
-    title('correlation image');
-
-    % show peak-to-noise ratio 
-    subplot(132);
-    imagesc(PNR,[0,max(PNR(:))*0.98]); colorbar;
-    axis equal off tight;
-    title('peak-to-noise ratio');
-
-    % show pointwise product of correlation image and peak-to-noise ratio 
-    subplot(133);
-    imagesc(Cn.*PNR, [0,max(PNR(:))*0.98]); colorbar;
-    axis equal off tight;
-    title('Cn*PNR');
-    ha = input('Happy with the crop? y/n\n', 's');
-    switch ha
-        case 'y'
-            happy = true;
-        case 'n'
-            happy = false;
-    end
-    
-    close(f_temp);
-end
+% happy = false;
+% vid_temp = VideoReader([ms.dirName separator ms.analysis_time separator 'msvideo_full.avi']);
+% vmat_temp = read(vid_temp);
+% T_temp = vid_temp.NumFrames;
+% delete(vid_temp);
+% 
+% vmat_temp1 = vmat_temp(:,:,:,round(linspace(1, T_temp, min(T_temp, 1000))));
+% vmat_temp1 = squeeze(vmat_temp1);
+% opt_temp.d1 = size(vmat_temp1,1);
+% opt_temp.d2 = size(vmat_temp1,2);
+% opt_temp.gSiz = 7; % edit to match msRunCNMFE_large.m
+% opt_temp.gSig = 3;
+% opt_temp.center_psf = true;
+% [Cn1, PNR1] = correlation_image_endoscope(vmat_temp1, opt_temp);
+% 
+% while ~happy
+%     f_temp = figure('position', [10, 500, 1776, 400]);
+%     subplot(131);
+%     imagesc(Cn1, [0, 1]); colorbar;
+%     axis equal off tight;
+%     title('correlation image');
+% 
+%     % show peak-to-noise ratio 
+%     subplot(132);
+%     imagesc(PNR1,[0,max(PNR1(:))*0.98]); colorbar;
+%     axis equal off tight;
+%     title('peak-to-noise ratio');
+% 
+%     % show pointwise product of correlation image and peak-to-noise ratio 
+%     subplot(133);
+%     imagesc(Cn1.*PNR1, [0,max(PNR1(:))*0.98]); colorbar;
+%     axis equal off tight;
+%     title('Cn*PNR');
+% 
+%     roi = drawrectangle(gca);
+%     roi_pos = round(roi.Position);
+% 
+%     close(f_temp);
+%     vmat_temp2 = vmat_temp1(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(vmat_temp1,1)), roi_pos(1):min(size(vmat_temp1,2), roi_pos(1)+roi_pos(3)-1),:);
+%     opt_temp.d1 = size(vmat_temp2,1);
+%     opt_temp.d2 = size(vmat_temp2,2);
+%     [Cn, PNR] = correlation_image_endoscope(vmat_temp2, opt_temp);
+% 
+% 
+%     f_temp = figure('position', [10, 500, 1776, 400]);
+%     subplot(131);
+%     imagesc(Cn, [0, 1]); colorbar;
+%     axis equal off tight;
+%     title('correlation image');
+% 
+%     % show peak-to-noise ratio 
+%     subplot(132);
+%     imagesc(PNR,[0,max(PNR(:))*0.98]); colorbar;
+%     axis equal off tight;
+%     title('peak-to-noise ratio');
+% 
+%     % show pointwise product of correlation image and peak-to-noise ratio 
+%     subplot(133);
+%     imagesc(Cn.*PNR, [0,max(PNR(:))*0.98]); colorbar;
+%     axis equal off tight;
+%     title('Cn*PNR');
+%     ha = input('Happy with the crop? y/n\n', 's');
+%     switch ha
+%         case 'y'
+%             happy = true;
+%         case 'n'
+%             happy = false;
+%     end
+%     
+%     close(f_temp);
+% end
 
 %% 3.b Finish cropping, save cropped video as 'msvideo.avi'
-save([ms.dirName separator ms.analysis_time separator 'msbckup.mat'],'ms');
-ms.roi_pos_ds = roi_pos;
-ms.roi_pos_full = [(roi_pos(1:2) - 1) * ms.ds+1, roi_pos(3:4) * ms.ds];
-ms.old_width = ms.width;
-ms.old_heght = ms.height;
-ms.width = ms.roi_pos_full(3);
-ms.height = ms.roi_pos_full(4);
-ms.meanFrame = ms.meanFrame(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(ms.meanFrame,1)), roi_pos(1):min(size(ms.meanFrame,2), roi_pos(1)+roi_pos(3)-1));
-
-
-vmat_temp = squeeze(vmat_temp);
-vmat_temp = vmat_temp(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(vmat_temp,1)), roi_pos(1):min(size(vmat_temp,2), roi_pos(1)+roi_pos(3)-1),:);
-
-% movefile([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], [ms.dirName separator ms.analysis_time separator 'old_msvideo.avi'], 'f');
-viw = VideoWriter([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], 'Grayscale AVI');
-open(viw);
-for i = 1:size(vmat_temp,3)
-    writeVideo(viw, vmat_temp(:,:,i));
-end
-close(viw);
-delete(viw);
-
-save([ms.dirName separator ms.analysis_time separator 'msvideo_cropped.mat'], 'vmat_temp');
-save([ms.dirName separator ms.analysis_time separator 'ms_after_crop.mat'],'ms');
-
-clear vmat_temp1 vmat_temp2 roi T_temp opt_temp vid_temp f_temp Cn1 Cn PNR1 PNR ha happy
-clear vmat_temp viw roi_pos;
+% save([ms.dirName separator ms.analysis_time separator 'msbckup.mat'],'ms');
+% ms.roi_pos_ds = roi_pos;
+% ms.roi_pos_full = [(roi_pos(1:2) - 1) * ms.ds+1, roi_pos(3:4) * ms.ds];
+% ms.old_width = ms.width;
+% ms.old_heght = ms.height;
+% ms.width = ms.roi_pos_full(3);
+% ms.height = ms.roi_pos_full(4);
+% ms.meanFrame = ms.meanFrame(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(ms.meanFrame,1)), roi_pos(1):min(size(ms.meanFrame,2), roi_pos(1)+roi_pos(3)-1));
+% 
+% 
+% vmat_temp = squeeze(vmat_temp);
+% vmat_temp = vmat_temp(roi_pos(2):min(roi_pos(2)+roi_pos(4)-1, size(vmat_temp,1)), roi_pos(1):min(size(vmat_temp,2), roi_pos(1)+roi_pos(3)-1),:);
+% 
+% % movefile([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], [ms.dirName separator ms.analysis_time separator 'old_msvideo.avi'], 'f');
+% viw = VideoWriter([ms.dirName separator ms.analysis_time separator 'msvideo.avi'], 'Grayscale AVI');
+% open(viw);
+% for i = 1:size(vmat_temp,3)
+%     writeVideo(viw, vmat_temp(:,:,i));
+% end
+% close(viw);
+% delete(viw);
+% 
+% save([ms.dirName separator ms.analysis_time separator 'msvideo_cropped.mat'], 'vmat_temp');
+% save([ms.dirName separator ms.analysis_time separator 'ms_after_crop.mat'],'ms');
+% 
+% clear vmat_temp1 vmat_temp2 roi T_temp opt_temp vid_temp f_temp Cn1 Cn PNR1 PNR ha happy
+% clear vmat_temp viw roi_pos;
 
 %% 4 - Perform CNMFE
 display('Step 3: CNMFE');
@@ -175,3 +178,4 @@ end
 [label, scores] = cnn_classifier(ms, '', 0.03);
 ms.cell_label = label;
 save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
+end
