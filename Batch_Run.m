@@ -2,27 +2,27 @@
 % all your avi files (make sure all are gray avis) are organized in
 % experiment_directory/**/my_folder. my_folder can be any folder name, as long
 % as it is consistant across experiments, and can be uniquely found. it can be in
-% subfolder of any order, the script will do a recursive search and return all
-% directories containing the folder name. 
+% subfolder of any order, the script will do a recursive search and return 
+% all directories matching the folder name. 
 
 
 
 
 %% search folders
-fname = 'XZ_run'; % change this to your folder name 
+fname = 'ms'; % change this to your folder name 
 d = dir([pwd,'\**\']); % list all pathes under working directory
 d = d([d(:).isdir]); % remove non-folder pathes
 idx = [];
 for i = 1:length(d)
-    if contains(d(i).name, fname)
+    if strcmp(d(i).name, fname)
        idx = [idx,i];
     end
 end
 
-d = d(idx); % now d only contains avi folders 
+d = d(idx); % now d only contains target folders 
 
 for i = 1:length(d)
-    fprintf('%d, %s', i, d(i).folder); % list all avi pathes, check before run!
+    fprintf('%d, %s, %s \n', i, d(i).folder, d(i).name); % list all avi pathes, check before run!
 end
 %% Run batch preprocessing 
 
