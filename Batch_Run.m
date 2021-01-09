@@ -9,7 +9,7 @@
 
 
 %% search folders
-fname = 'ms'; % change this to your folder name 
+fname = 'XZ_run'; % change this to your folder name 
 d = dir([pwd,'\**\']); % list all pathes under working directory
 d = d([d(:).isdir]); % remove non-folder pathes
 idx = [];
@@ -25,12 +25,14 @@ for i = 1:length(d)
     fprintf('%d, %s, %s \n', i, d(i).folder, d(i).name); % list all avi pathes, check before run!
 end
 %% Run batch preprocessing 
+% if out of memory error, resume where the error happens
 
-for id = 9:length(d) 
+for id = 13:length(d) 
     full_path = [d(id).folder,'\',d(id).name];
     cd(full_path);
     pwd
     XZ_preprocessing_batch();
+    close all;
     clearvars -except d id idx i full_path
 end
 
