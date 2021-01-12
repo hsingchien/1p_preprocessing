@@ -1,0 +1,91 @@
+function  clabel = FastScreener(ms)
+% Fast scan through all traces and label cells
+    if nargin < 1
+        [msfile, msfold] = uigetfile();
+        ms = load([msfold, msfile]);
+        ms = ms.ms;
+    else
+        msfold = pwd;
+    end
+    
+    
+
+    traces = zscore(ms.RawTraces);
+    clabel = ones(1,size(traces,2));
+    cur_c = 1;
+    num_c = size(traces,2);
+    userdata.cur_c = cur_c;
+    userdata.num_c = num_c;
+    fi = figure('KeyPressFcn',@KeyFcn,'Position',[100,100,800,400]);
+    setappdata(fi, 'cur_c', cur_c);
+    setappdata(fi, 'num_c', num_c);
+    setappdata(fi, 'traces', traces);
+    setappdata(fi, 'clabel', clabel);
+    setappdata(fi, 'path', msfold);
+    ax = axes('Parent', fi);
+    phandle = plot((1:size(traces,1))/30,traces(:,cur_c),'Parent',gca);
+    setappdata(fi, 'phandle', phandle);
+    ctitle = title(ax, ['cell#', num2str(cur_c)]);
+    if clabel(cur_c) == 0
+        set(ctitle, 'Color', [1,0,0]);
+    else
+        set(ctitle, 'Color', [0,1,0]);
+    end
+    setappdata(fi, 'ctitle', ctitle);
+end
+
+function KeyFcn(src, event)
+    switch event.Key
+        case 'a'
+            ts = getappdata(src, 'traces');
+            c = getappdata(src, 'cur_c');
+            c = max(c-1, 1);
+            setappdata(src, 'cur_c', c);
+            clabel = getappdata(src, 'clabel');
+            phandle = getappdata(src, 'phandle');
+            set(phandle, 'YData', ts(:,c));
+            ctitle = getappdata(src, 'ctitle');
+            set(ctitle, 'String', ['cell#', num2str(c)]);
+            if clabel(max(c-1,1)) == 1
+                set(ctitle, 'Color', [0,1,0]);
+            else
+                set(ctitle, 'Color', [1,0,0]);
+            end
+        case 'd'
+            ts = getappdata(src, 'traces');
+            c = getappdata(src, 'cur_c');
+            nu = getappdata(src, 'num_c');
+            c = min(c+1, nu);
+            setappdata(src, 'cur_c', c);
+            phandle = getappdata(src, 'phandle');
+            set(phandle, 'YData', ts(:,c));
+            ctitle = getappdata(src, 'ctitle');
+            set(ctitle, 'String', ['cell#', num2str(c)]);
+            clabel = getappdata(src, 'clabel');
+            if clabel(c) == 1
+                set(ctitle, 'Color', [0,1,0]);
+            else
+                set(ctitle, 'Color', [1,0,0]);
+            end
+        case 'j'
+            c = getappdata(src, 'cur_c');
+            c_label = getappdata(src, 'clabel');
+            c_label(c) = setdiff([0,1], c_label(c));
+            setappdata(src, 'clabel', c_label);
+            tclabel_handle = getappdata(src, 'ctitle');
+            if c_label(c) == 0
+                set(tclabel_handle, 'Color', [1,0,0]);
+            else
+                set(tclabel_handle, 'Color', [0,1,0]);
+            end
+        case 's'
+            c_label = getappdata(src, 'clabel');
+            msfold = getappdata(src, 'msfold');
+            save([msfold, 'c_label.mat'], 'c_label');
+    end
+            
+            
+        
+    end
+        
+
