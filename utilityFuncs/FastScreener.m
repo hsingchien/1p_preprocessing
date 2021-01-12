@@ -1,5 +1,12 @@
 function  clabel = FastScreener(ms)
-% Fast scan through all traces and label cells
+% Fast scan through all traces and label traces
+% Input takes CNMFE output ms, or leave it blank, a pop out window will let
+% you choose your saved ms.mat.
+% Keys: a -- previous cell. d -- next cell. j -- change label. s --
+% save(will save to the same directory with ms.mat if input is blank,
+% otherwise will save to current working directory), file name = c_label.mat. 
+% title will indicate the label of current cell, green = good, red = bad
+
     if nargin < 1
         [msfile, msfold] = uigetfile();
         ms = load([msfold, msfile]);
