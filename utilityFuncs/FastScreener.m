@@ -18,11 +18,13 @@ function  clabel = FastScreener(ms)
     
 
     traces = zscore(ms.RawTraces);
-    clabel = ones(1,size(traces,2));
+    if ~isfield(ms, 'cell_label')
+        clabel = ones(1,size(traces,2));
+    else
+        clabel = ms.cell_label;
+    end
     cur_c = 1;
     num_c = size(traces,2);
-    userdata.cur_c = cur_c;
-    userdata.num_c = num_c;
     fi = figure('KeyPressFcn',@KeyFcn,'Position',[100,100,800,400]);
     setappdata(fi, 'cur_c', cur_c);
     setappdata(fi, 'num_c', num_c);
@@ -32,7 +34,7 @@ function  clabel = FastScreener(ms)
     ax = axes('Parent', fi);
     phandle = plot((1:size(traces,1))/30,traces(:,cur_c),'Parent',gca);
     setappdata(fi, 'phandle', phandle);
-    ctitle = title(ax, ['cell#', num2str(cur_c)]);
+    ctitle = title(ax, ['cell#', num2str(cur_c),'/',num2str(num_c)]);
     if clabel(cur_c) == 0
         set(ctitle, 'Color', [1,0,0]);
     else
@@ -52,7 +54,7 @@ function KeyFcn(src, event)
             phandle = getappdata(src, 'phandle');
             set(phandle, 'YData', ts(:,c));
             ctitle = getappdata(src, 'ctitle');
-            set(ctitle, 'String', ['cell#', num2str(c)]);
+            set(ctitle, 'String', ['cell#', num2str(c),'/',num2str(getappdata(src,'num_c'))]);
             if clabel(max(c-1,1)) == 1
                 set(ctitle, 'Color', [0,1,0]);
             else
@@ -67,7 +69,7 @@ function KeyFcn(src, event)
             phandle = getappdata(src, 'phandle');
             set(phandle, 'YData', ts(:,c));
             ctitle = getappdata(src, 'ctitle');
-            set(ctitle, 'String', ['cell#', num2str(c)]);
+            set(ctitle, 'String', ['cell#', num2str(c),'/',num2str(nu)]);
             clabel = getappdata(src, 'clabel');
             if clabel(c) == 1
                 set(ctitle, 'Color', [0,1,0]);
@@ -87,7 +89,7 @@ function KeyFcn(src, event)
             end
         case 's'
             c_label = getappdata(src, 'clabel');
-            msfold = getappdata(src, 'msfold');
+            msfold = getappdata(src, 'path');
             save([msfold, 'c_label.mat'], 'c_label');
     end
             
