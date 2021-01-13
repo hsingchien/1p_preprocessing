@@ -55,7 +55,7 @@ function KeyFcn(src, event)
             set(phandle, 'YData', ts(:,c));
             ctitle = getappdata(src, 'ctitle');
             set(ctitle, 'String', ['cell#', num2str(c),'/',num2str(getappdata(src,'num_c'))]);
-            if clabel(max(c-1,1)) == 1
+            if clabel(c) == 1
                 set(ctitle, 'Color', [0,1,0]);
             else
                 set(ctitle, 'Color', [1,0,0]);
