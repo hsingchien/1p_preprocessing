@@ -12,13 +12,3 @@
 *.h5
 
 *.asv
-
-Batch_Run.m
-
-XZ_preprocessing.m
-
-XZ_preprocessing_batch.m
-
-msRunCNMFE_large.m
-
-msRunCNMFE_large_batch.m
