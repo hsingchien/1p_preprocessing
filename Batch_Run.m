@@ -5,16 +5,19 @@
 % subfolder of any order, the script will do a recursive search and return 
 % all directories matching the folder name. 
 
-% test change from macOS
 
 %% search ms folders
-% navigate to top-level directory first
-dallfolders = searchFolders('msCam', pwd)
+% **navigate to top-level directory first
+dallfolders = searchFolders('msCam_raw', pwd)
 
 %% check paths
 for i = 1:length(dallfolders)
     fprintf('%d, %s, %s \n', i, dallfolders(i).folder, dallfolders(i).name); % list all avi pathes, check before run!
 end
+
+%% optional transcode all ff1 avi to raw avi
+% converts for all avi files in all dir, incl beh, outputs to folder 'raw'
+convert_msCam1({pwd})
 
 %% optional renaming, prepend 'msCam' and start at 1 to be compatible w/ downstream pipeline
 % expects format eg "0.avi"
@@ -34,6 +37,8 @@ for id = 1:length(dallfolders)
     full_path = [dallfolders(id).folder,'\',dallfolders(id).name];
     aviRGBtoGray(full_path, strcat(full_path, '/ms/'), 'msCam', ''); % put in '/ms/' subfolder; don't prepend
 end
+
+%% optional move to msCam to be compatible w/ old pipeline
 
 %% search converted folders
 % navigate to top-level directory first

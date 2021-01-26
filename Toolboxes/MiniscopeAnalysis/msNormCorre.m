@@ -29,6 +29,7 @@ bound = 0;
 template = [];
 
 writerObj = VideoWriter([ms.dirName separator ms.analysis_time separator 'msvideo_full.avi'],'Grayscale AVI');
+
 open(writerObj);
 
 ms.shifts = [];
