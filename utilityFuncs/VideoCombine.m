@@ -72,6 +72,7 @@ end
           vmat_total(:,:,total_f+size(vmat_bw,3)+1:frame_per_file * length(avi_names)) = [];
        end
        total_f = total_f + size(vmat_bw, 3);
+       fprintf('%s is processed\n', avi_names{i});
        fprintf('%d of %d files processed...\n', i, length(avi_names));
        fprintf('%.2f s remaining...\n', (length(avi_names) - i)*toc);
        delete(v);   
@@ -89,7 +90,7 @@ end
             if strcmp(vtype, 'm')
                 viw = VideoWriter([dir_f '/msvideo.avi'], 'Grayscale AVI');
             else
-                viw = VideoWriter([dir_f '/behav_video.avi'], 'Grayscale AVI');
+                viw = VideoWriter([dir_f '/behav_video.avi'], 'Motion JPEG AVI');
             end
             open(viw);
             for i = 1:size(vmat_total,3)
