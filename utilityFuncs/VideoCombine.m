@@ -1,6 +1,6 @@
 function vmat_total = VideoCombine(dir_f, vtype, sa, savetype)
 % input: 
-% VideoCombine(dir_f, vtype, sa)
+% VideoCombine(dir_f, vtype, sa, savetype)
 % dir_f, directory of target video files, default .avi files named in order
 % starting from 0. 
 % vtype, 'mat' or 'avi'
