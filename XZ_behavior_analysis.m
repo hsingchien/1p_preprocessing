@@ -14,26 +14,24 @@ addpath(genpath('D:/Xingjian/Repositories/XZ_funkies'));
 %% combine into 1 video file
 VideoCombine(pwd, 'b', true, 'avi');
 
-
 %% convert avi to seq
 
 seqName = 'behavior.seq';
 aviName = 'behav_video.avi';
-seqIo([seqName],'frImgs',struct('codec','raw'),'aviName',[aviName]);
+seqIo([seqName],'frImgs',struct('codec','png'),'aviName',[aviName]);
 
 %% annotate behavior
 behavior_annotator;
 
 %% construct behavior struct
-annot_f = 'XZ38_mouse_present.txt'
+annot_f = 'behavior.txt'
 
 A = behaviorData('load', annot_f);
 
 %% construct experiment struct
-expInfo = 'XZ38_mouse_present';
-ms_f1 = strrep('D:\Xingjian\MiniscopeData\HC_mouse_presenting\XZ38\17_27_33\Miniscope\raw\ms\ms.mat','\','/');
-ms_f2 = strrep('','\','/');
-E_struct = ExpstructGen(expInfo, ms_f1, ms_f2, A);
-save(strrep('D:\Xingjian\MiniscopeData\HC_mouse_presenting\XZ38\17_27_33\E_struct.mat','\','/'),'E_struct');
+expInfo = {'SH19_HCsep2','SH21_HCsep1'};
+ms_f1 = strrep('E:\MiniscopeData(processed)\NewCage_free_dual\DW22_XZ46\11_39_46_01_21_21\Miniscope_1_DW22\ms.mat','\','/');
+ms_f2 = strrep('E:\MiniscopeData(processed)\NewCage_free_dual\DW22_XZ46\11_39_46_01_21_21\Miniscope_0_XZ46\ms.mat','\','/');
+E_struct = ExpstructGen(expInfo, ms_f1, ms_f2, A);save(strrep('E:\MiniscopeData(processed)\NewCage_free_dual\DW22_XZ46\11_39_46_01_21_21\E_struct.mat','\','/'),'E_struct');
 %% Plot all cells with behavior patched
-PlotSelectedCells( E_struct{1}, 1:150, false)
+PlotSelectedCells(E_struct{1}, 1:100, false)
