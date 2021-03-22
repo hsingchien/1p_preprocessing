@@ -1,5 +1,5 @@
 %% test
-function XZ_preprocessing_batch()
+function XZ_CNMFE_batch(dirName, vName)
 %% Run Initialize first to add pathes to necessary toolboxes
 
 
@@ -7,7 +7,6 @@ function XZ_preprocessing_batch()
 %%
 % Processing based on msRun2018;
 %%
-clear all
 
 if ispc
     separator = '\'; % For pc operating systems
@@ -19,8 +18,8 @@ end
 % aviRGBtoGray(pwd, '', 'msCam', '');
 
 %% Parameters
-spatial_downsampling = 2; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
-isnonrigid = true; % If true, performs non-rigid registration (slower). If false, rigid alignment (faster).
+spatial_downsampling = 1; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
+isnonrigid = false; % If true, performs non-rigid registration (slower). If false, rigid alignment (faster).
 analyse_behavior = false;
 copy_to_googledrive = false;
 if copy_to_googledrive;
@@ -28,21 +27,24 @@ if copy_to_googledrive;
 end
 
 % Generate timestamp to save analysis
-script_start = tic;
+% script_start = tic;
 ct = clock;
 % analysis_time =strcat(date,'_', num2str(ct(4)),'-',num2str(ct(5)),'-',num2str(floor(ct(6))));
 analysis_time = 'temp';
 %% %% 1 - Create video object and save into matfile
 display('Step 1: Create video object');
-ms = msGenerateVideoObj(pwd,'msCam','avi');
+% ms = msGenerateVideoObj(pwd,'msCam','avi');
+ms.dirName = dirName;
+ms.vName = vName;
 ms.analysis_time = analysis_time;
 ms.ds = spatial_downsampling;
 mkdir(strcat(pwd,separator,analysis_time));
 save([ms.dirName separator 'ms.mat'],'ms');
 %% 2 - Perform motion correction using NormCorre
-display('Step 2: Motion correction');
-
-ms = msNormCorre(ms,isnonrigid);
+% display('Step 2: Motion correction');
+% 
+% ms = msNormCorre(ms,isnonrigid);
+% save('ms_after_registration.mat','ms');
 
 %% 3.a - Crop
 % show correlation image 
@@ -148,28 +150,35 @@ ms = msNormCorre(ms,isnonrigid);
 % clear vmat_temp viw roi_pos;
 
 %% 4 - Perform CNMFE
+
+if ispc
+    separator = '\'; % For pc operating systems
+else
+    separator = '/'; % For unix (mac, linux) operating systems
+end
+
 display('Step 3: CNMFE');
 ms = msRunCNMFE_large_batch(ms);
 msExtractSFPs(ms); % Extract spatial footprints for subsequent re-alignement
 
-analysis_duration = toc(script_start);
-ms.analysis_duration = analysis_duration;
+% analysis_duration = toc(script_start);
+% ms.analysis_duration = analysis_duration;
 
 save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
-disp(['Data analyzed in ' num2str(analysis_duration) 's']);
+% disp(['Data analyzed in ' num2str(analysis_duration) 's']);
 
-if copy_to_googledrive;
-    destination_path = char(strcat(copydirpath, separator, ms.Experiment));
-    mkdir(destination_path);
-    copyfile('ms.mat', [destination_path separator 'ms.mat']);
-    copyfile('SFP.mat', [destination_path separator 'SFP.mat']);
-    disp('Successfully copied ms and SFP files to GoogleDrive');
-    try % This is to attempt to copy an existing behav file if you already analyzed it in the past
-            copyfile([ms.dirName separator 'behav.mat'], [destination_path separator 'behav.mat']);
-        catch
-            disp('Behavior not analyzed yet. No files will be copied.');
-    end
-end
+% if copy_to_googledrive;
+%     destination_path = char(strcat(copydirpath, separator, ms.Experiment));
+%     mkdir(destination_path);
+%     copyfile('ms.mat', [destination_path separator 'ms.mat']);
+%     copyfile('SFP.mat', [destination_path separator 'SFP.mat']);
+%     disp('Successfully copied ms and SFP files to GoogleDrive');
+%     try % This is to attempt to copy an existing behav file if you already analyzed it in the past
+%             copyfile([ms.dirName separator 'behav.mat'], [destination_path separator 'behav.mat']);
+%         catch
+%             disp('Behavior not analyzed yet. No files will be copied.');
+%     end
+% end
 % get ms output, containing:
 % SFPs, A, neuron contours, 
 % RawTraces, FiltTraces, C, raw signals of each neuron, stored in 

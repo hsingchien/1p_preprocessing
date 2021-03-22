@@ -16,18 +16,18 @@ end
 
 %% choose data
 neuron = Sources2D();
-nam = get_fullname([ms.dirName separator ms.analysis_time separator 'msvideo_full.avi']);
+nam = get_fullname([ms.dirName separator ms.vName]);
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively
 
 %% parameters
 % -------------------------    COMPUTATION    -------------------------  %
-pars_envs = struct('memory_size_to_use', 64, ...   % GB, memory space you allow to use in MATLAB
-    'memory_size_per_patch', 4, ...   % GB, space for loading data within one patch
+pars_envs = struct('memory_size_to_use', 94, ...   % GB, memory space you allow to use in MATLAB
+    'memory_size_per_patch', 6, ...   % GB, space for loading data within one patch
     'patch_dims', [64, 64]);  %GB, patch size
 % -------------------------      SPATIAL      -------------------------  %
 include_residual = false; % If true, look for neurons in the residuals
 gSig = 3;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 18;          % pixel, neuron diameter
+gSiz = 7;          % pixel, neuron diameter
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not
 if with_dendrites
@@ -72,25 +72,25 @@ merge_thr = 0.65;     % thresholds for merging neurons; [spatial overlap ratio, 
 method_dist = 'max';   % method for computing neuron distances {'mean', 'max'}
 dmin = 5;       % minimum distances between two neurons. it is used together with merge_thr
 dmin_only = 2;  % merge neurons if their distances are smaller than dmin_only.
-merge_thr_spatial = [0.8, 0.1, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
+merge_thr_spatial = [0.6, 0.2, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible.
 min_corr = 0.75;     % minimum local correlation for a seeding pixel, default 0.8
-min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
+min_pnr = 13;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = gSig^2;      % minimum number of nonzero pixels for each neuron
 bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames
 save_initialization = false;    % save the initialization procedure as a video.
 use_parallel = true;    % use parallel computation for parallel computing
-show_init = true;   % show initialization results
+show_init = false;   % show initialization results
 choose_params = false; % manually choose parameters
 center_psf = true;  % set the value as true when the background fluctuation is large (usually 1p data)
 % set the value as false when the background fluctuation is small (2p)
 
 % -------------------------  Residual   -------------------------  %
 min_corr_res = 0.7; % Default 0.7
-min_pnr_res = 8;
+min_pnr_res = 5;
 seed_method_res = 'auto';  % method for initializing neurons from the residual
 update_sn = true;
 

@@ -9,12 +9,12 @@
 
 
 %% search folders
-fname = 'XZ_run'; % change this to your folder name 
+fname = 'Miniscope'; % change this to your folder name 
 d = dir([pwd,'\**\']); % list all pathes under working directory
 d = d([d(:).isdir]); % remove non-folder pathes
 idx = [];
 for i = 1:length(d)
-    if strcmp(d(i).name, fname)
+    if contains(d(i).name, fname)
        idx = [idx,i];
     end
 end
@@ -24,15 +24,64 @@ d = d(idx); % now d only contains target folders
 for i = 1:length(d)
     fprintf('%d, %s, %s \n', i, d(i).folder, d(i).name); % list all avi pathes, check before run!
 end
+%% if avi are RGB, convert to Gray first
+for id = 1:length(d)
+    full_path = [d(id).folder,'\',d(id).name];
+    cd(full_path);
+    pwd
+    aviRGBtoGray(pwd, '', 'msCam', '');
+
+
+end
+
 %% Run batch preprocessing 
 % if out of memory error, resume where the error happens
 
-for id = 13:length(d) 
+for id = 1:length(d) 
     full_path = [d(id).folder,'\',d(id).name];
     cd(full_path);
     pwd
     XZ_preprocessing_batch();
     close all;
-    clearvars -except d id idx i full_path
+    clearvars -except d id idx i full_path;
+    pause(1) 
 end
+%% END %%
+%% BEGIN ANOTHER BatchRun BY ASSIGNING TARGET DIRECTORIES
+exp_directories = {
+'D:\Xingjian\SH_hsyn_open\raw\SH20_HCexp3\H12_M9_S57';
+'D:\Xingjian\SH_hsyn_open\raw\SH24_HCexp3\H12_M9_S56';
+'D:\Xingjian\SH_hsyn_open\raw\SH25_HCexp3\H13_M4_S0';
+'D:\Xingjian\SH_hsyn_open\raw\SH26_HCexp2\H13_M3_S59';
+'D:\Xingjian\SH_hsyn_open\raw\SH19_HCexp5\H13_M30_S0';
+'D:\Xingjian\SH_hsyn_open\raw\SH26_HCexp3\H13_M30_S1';
+};
+
+file_names = {
+'msvideo.avi';
+'msvideo.avi';
+'msvideo.avi';
+'msvideo.avi';
+'msvideo.avi';
+'msvideo.avi';
+}
+for id = 1:length(exp_directories)
+    cd(exp_directories{id});
+    pwd
+    XZ_preprocessing_batch(exp_directories{id}, file_names{id});
+    close all;
+    clearvars -except exp_directories file_names id
+    pause(1);
+end
+    
+     
+
+
+
+
+
+
+
+
+
 

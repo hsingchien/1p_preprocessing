@@ -39,7 +39,7 @@ for p = 1:length(filepath)
             else
                 pathOut = [strrep(aviFiles(i).folder, filepath{p}, outpath{p}), '\', fileOut];
             end
-            ffmpegtranscode(strrep(pathIn,'\','/'), strrep(pathOut,'\','/'), 'AudioCodec', 'none', 'VideoCodec', 'raw');
+            ffmpegtranscode(strrep(pathIn,'/','\'), strrep(pathOut,'/','\'), 'AudioCodec', 'none', 'VideoCodec', 'raw');
             fprintf(1, '%3d | %2d - %2d | %s -> %s\n', str2num(fcount), p, i, pathIn, pathOut);
 %         end
     end
