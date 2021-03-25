@@ -13,7 +13,7 @@ This is the main script to batch process the videos. It does Motion Correction (
 4. Make sure JAVA is allowed to use maximum memory (change this in matlab preferences -> General -> JAVA Heap Memory)
 5. Make sure in matlab preferences -> General -> MAT-Files, MATLAB Version 7.3 or later is selected
 6. Make sure you cloned the entire repository and have run Initialize.m (or make sure the toolboxes and other necessaties are added to the path)
-7. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox
+7. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models
 8. If you have 'out of memory' error, try using less cores in parallel computing settings
 
 After Batch_NormCorre_FFT_CNMFE, you will get a ms.mat, which contains all the outputs. In ms.mat,  
