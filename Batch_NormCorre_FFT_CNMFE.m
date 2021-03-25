@@ -10,7 +10,9 @@
 %% Set paths to your raw videos
 
 RawInputDir = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope1_XZ70'
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope2_XZ71';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope1_XZ70';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope2_XZ71';
     };
 downsample_ratio = 2;
 isnonrigid = false;
@@ -23,7 +25,7 @@ for i = 1:length(RawInputDir)
    XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
    % this will generate a 'processed' folder containing the motion
    % corrected & downsampled video as 'msvideo_corrected.avi'
-   
+   clearvars -except RawInputDir downsample_ratio isnonrigid i;
    
    %% FFT video generation
    cd('processed\');
