@@ -37,7 +37,7 @@ Once you are happy with the paramters, rerun CNMFE <p><code>XZ_CNMFE_batch(dirNa
 Once you get ms.mat, you want to do a screening. Label the good ones and bad ones.
 There are 2 tools you can use.
 ## FastScreener
-<p><code>FastScreener;('1.avi')</code></p>
+<p><code>FastScreener;</code></p>
 In the pop-out window, select ms.mat. RawTraces of will be displayed. Good cells will have green title, and bad cells are red.
 
 
@@ -48,7 +48,7 @@ Keys:
 - 'j' -- toggle cell label    
 
 ## CellScreener
-<p><code>CellScreener;('1.avi')</code></p>
+<p><code>CellScreener;</code></p>
 This GUI provides a more versatile solution for cell screening. You can easily visualize and compare ROIs in the video.    
 
 **Quick guide**  
