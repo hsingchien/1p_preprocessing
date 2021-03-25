@@ -38,8 +38,10 @@ Once you get ms.mat, you want to do a screening. Label the good ones and bad one
 There are 2 tools you can use.
 ## FastScreener
 <p><code>FastScreener;('1.avi')</code></p>
-In the pop-out window, select ms.mat. RawTraces of will be displayed. Good cells will have green title, and bad cells are red. 
-Keys:  
+In the pop-out window, select ms.mat. RawTraces of will be displayed. Good cells will have green title, and bad cells are red.
+
+
+Keys: 
 - 'a' -- previous cell    
 - 'd' -- next cell    
 - 's' -- save, cell label is saved as 'c_label.mat' in the same directory as ms.mat you selected. Load this and ms.mat, set ms.cell_label to c_label and overwrite the original ms.mat    
@@ -48,6 +50,7 @@ Keys:
 ## CellScreener
 <p><code>CellScreener;('1.avi')</code></p>
 This GUI provides a more versatile solution for cell screening. You can easily visualize and compare ROIs in the video.    
+
 **Quick guide**  
 1. click 'load V(mat/avi)' button, select .avi or .mat file of GCaMP video. Loading will take some moments. In the current version, video file is loaded to memory for quick access.  
 2. click load ms.mat, select ms.mat. If what you have are PCA/ICA outputs, use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to readable ms files. 
