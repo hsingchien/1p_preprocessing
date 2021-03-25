@@ -6,9 +6,16 @@
 % the code has to be run in base workspace. At last, CNMFE on the FFT video. 
 % Reject cells with CellScreener after this. 
 
-RawInputDir = {};
+
+%% Set paths to your raw videos
+
+RawInputDir = {
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope1_XZ70'
+    };
 downsample_ratio = 2;
 isnonrigid = false;
+
+%% Start batch
 for i = 1:length(RawInputDir)
    
    cd(RawInputDir{i});
@@ -174,5 +181,5 @@ for i = 1:length(RawInputDir)
     %% CNMFE on FFT output
     close all;
     XZ_CNMFE_batch(pwd, 'msvideo_dFF.avi');
-    
+
 end

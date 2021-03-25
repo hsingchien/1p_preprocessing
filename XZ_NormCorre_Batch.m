@@ -27,7 +27,7 @@ copy_to_googledrive = false;
 analysis_time = 'processed';
 %% %% 1 - Create video object and save into matfile
 display('Step 1: Create video object');
-ms = msGenerateVideoObj(pwd,'msCam','avi');
+ms = msGenerateVideoObj(pwd,'','avi');
 ms.analysis_time = analysis_time;
 ms.ds = spatial_downsampling;
 mkdir(strcat(pwd,separator,analysis_time));
