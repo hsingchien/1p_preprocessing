@@ -178,8 +178,9 @@ for i = 1:length(RawInputDir)
     
     close(C);
     close(C2);
-    %% CNMFE on FFT output
+    clearvars -except RawInputDir downsample_ratio isnonrigid i;
     close all;
+    %% CNMFE on FFT output
     XZ_CNMFE_batch(pwd, 'msvideo_dFF.avi');
 
 end
