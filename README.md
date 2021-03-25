@@ -76,7 +76,7 @@ ms.ds ----- downsample ration. set this to 1 if no downsample is performed.
 - 'k'/'l', move down (next cell) of cell1/2
 - 'b'/'n', jump to max signal frame of cell1/2 (quickly switch between 'b' and 'n' is a good way to tell 2 neighboring cells apart)
 - 'leftarrow'/'rightarrow', previous/next 'step' frame.
-8. 'RasterVideo' button will generate a raster video. Hit 'Play' to quick play the video. Left/Right key will move current frame by step. 'Step' sets the step size of Left/Right keypressing as well as video play.
+9. 'RasterVideo' button will generate a raster video. Hit 'Play' to quick play the video. Left/Right key will move current frame by step. 'Step' sets the step size of Left/Right keypressing as well as video play.
 
 
  
