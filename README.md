@@ -22,7 +22,7 @@ FiltTraces -- traces from model-based deconvolution. Usually this is what you wa
 SFPs -- ROI contours  
 
 **Parameters**  
-Batch_NormCorre_FFT_CNMFE takes 2 parameters: downsample ratio (default 2) and non-rigid registration toggle (default false).  
+Batch_NormCorre_FFT_CNMFE has 3 options: downsample ratio (default 2), non-rigid registration toggle (default false) and doFFT (default true).  
 If you are unsatisfied with the CNMFE output, major parameters can be set in msRunCNMFE_large_batch.m <p><code>edit msRunCNMFE_large_batch</code></p>
 These are the key parameters you want to focus:
 - min_corr = 0.8; min correlation to initialize an ROI. Increase this value if you get too many false positive ROIs. (in most cases, 0.8 is ok)
