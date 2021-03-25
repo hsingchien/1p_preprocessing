@@ -49,39 +49,18 @@ end
 %% END %%
 %% BEGIN ANOTHER BatchRun BY ASSIGNING TARGET DIRECTORIES
 exp_directories = {
-'D:\Xingjian\SH_hsyn_open\raw\SH20_HCexp3\H12_M9_S57';
-'D:\Xingjian\SH_hsyn_open\raw\SH24_HCexp3\H12_M9_S56';
-'D:\Xingjian\SH_hsyn_open\raw\SH25_HCexp3\H13_M4_S0';
-'D:\Xingjian\SH_hsyn_open\raw\SH26_HCexp2\H13_M3_S59';
-'D:\Xingjian\SH_hsyn_open\raw\SH19_HCexp5\H13_M30_S0';
-'D:\Xingjian\SH_hsyn_open\raw\SH26_HCexp3\H13_M30_S1';
+'D:\Xingjian\SH_hsyn_open\raw\SH21_HCexp4\H14_M17_S36';
+'D:\Xingjian\SH_hsyn_open\raw\SH25_HCexp4\H14_M17_S34'
 };
-
 file_names = {
-'msvideo.avi';
-'msvideo.avi';
-'msvideo.avi';
-'msvideo.avi';
 'msvideo.avi';
 'msvideo.avi';
 }
 for id = 1:length(exp_directories)
     cd(exp_directories{id});
     pwd
-    XZ_preprocessing_batch(exp_directories{id}, file_names{id});
+    XZ_CNMFE_batch(exp_directories{id}, file_names{id});
     close all;
     clearvars -except exp_directories file_names id
     pause(1);
 end
-    
-     
-
-
-
-
-
-
-
-
-
-
