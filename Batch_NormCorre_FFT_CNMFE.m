@@ -184,7 +184,7 @@ for i = 1:length(RawInputDir)
         close(C);
         close(C2);
         ij.IJ.run("Quit","");
-        clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT;
+        clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT vName;
         close all;
    end
     %% CNMFE on FFT output
