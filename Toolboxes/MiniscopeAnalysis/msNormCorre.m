@@ -28,15 +28,22 @@ bound = 0;
 
 template = [];
 
-writerObj = VideoWriter([ms.dirName separator ms.analysis_time separator 'msvideo_full.avi'],'Grayscale AVI');
-
+writerObj = VideoWriter([ms.dirName separator ms.analysis_time separator 'msvideo_corrected.avi'],'Grayscale AVI');
 open(writerObj);
 
 ms.shifts = [];
 ms.meanFrame = [];
+if isfield(ms, 'vName')
+    ms.numFiles = 1;
+end
+
 
 for video_i = 1:ms.numFiles;
-    name = [ms.vidObj{1, video_i}.Path separator ms.vidObj{1, video_i}.Name];
+    if isfield(ms, 'vName')
+        name = ms.vName;
+    else
+        name = [ms.vidObj{1, video_i}.Path separator ms.vidObj{1, video_i}.Name];
+    end
     disp(['Registration on: ' name]);
     
     % read data and convert to single

@@ -6,56 +6,61 @@
 % all directories matching the folder name. 
 
 
-%% search ms folders
-% **navigate to top-level directory first
-dallfolders = searchFolders('msCam_raw', pwd)
 
-%% check paths
-for i = 1:length(dallfolders)
-    fprintf('%d, %s, %s \n', i, dallfolders(i).folder, dallfolders(i).name); % list all avi pathes, check before run!
-end
 
-%% optional transcode all ff1 avi to raw avi
-% converts for all avi files in all dir, incl beh, outputs to folder 'raw'
-convert_msCam1({pwd})
-
-%% optional renaming, prepend 'msCam' and start at 1 to be compatible w/ downstream pipeline
-% expects format eg "0.avi"
-for id = 1:length(dallfolders) 
-    full_path = [dallfolders(id).folder,'\',dallfolders(id).name];
-    cd(full_path)
-    dfolder = dir(full_path);
-    aviidx = find(endsWith({dfolder.name},'.avi')==1);
-    originalfnames = [0:length(aviidx)-1];
-    for ii = 1:length(aviidx)
-        movefile([num2str(originalfnames(ii)) '.avi'], ['msCam' num2str(ii) '.avi']);
+%% search folders
+fname = 'Miniscope'; % change this to your folder name 
+d = dir([pwd,'\**\']); % list all pathes under working directory
+d = d([d(:).isdir]); % remove non-folder pathes
+idx = [];
+for i = 1:length(d)
+    if contains(d(i).name, fname)
+       idx = [idx,i];
     end
 end
 
-%% optional convert to grayscale
-for id = 1:length(dallfolders) 
-    full_path = [dallfolders(id).folder,'\',dallfolders(id).name];
-    aviRGBtoGray(full_path, strcat(full_path, '/ms/'), 'msCam', ''); % put in '/ms/' subfolder; don't prepend
+d = d(idx); % now d only contains target folders 
+
+for i = 1:length(d)
+    fprintf('%d, %s, %s \n', i, d(i).folder, d(i).name); % list all avi pathes, check before run!
 end
+%% if avi are RGB, convert to Gray first
+for id = 1:length(d)
+    full_path = [d(id).folder,'\',d(id).name];
+    cd(full_path);
+    pwd
+    aviRGBtoGray(pwd, '', 'msCam', '');
 
-%% optional move to msCam to be compatible w/ old pipeline
 
-%% search converted folders
-% navigate to top-level directory first
-dgrayfolders = searchFolders('ms', pwd)
-
-for i = 1:length(dgrayfolders)
-    fprintf('%d, %s, %s \n', i, dgrayfolders(i).folder, dgrayfolders(i).name); % list all avi pathes, check before run!
 end
 
 %% Run batch preprocessing 
 % if out of memory error, resume where the error happens
-for id = 2:length(dgrayfolders) % note skipping first
-    full_path = [dgrayfolders(id).folder,'\',dgrayfolders(id).name];
+
+for id = 1:length(d) 
+    full_path = [d(id).folder,'\',d(id).name];
     cd(full_path);
     pwd
     XZ_preprocessing_batch();
     close all;
-    clearvars -except d id idx i full_path dgrayfolders
+    clearvars -except d id idx i full_path;
+    pause(1) 
 end
-
+%% END %%
+%% BEGIN ANOTHER BatchRun BY ASSIGNING TARGET DIRECTORIES
+exp_directories = {
+'D:\Xingjian\SH_hsyn_open\raw\SH21_HCexp4\H14_M17_S36';
+'D:\Xingjian\SH_hsyn_open\raw\SH25_HCexp4\H14_M17_S34'
+};
+file_names = {
+'msvideo.avi';
+'msvideo.avi';
+}
+for id = 1:length(exp_directories)
+    cd(exp_directories{id});
+    pwd
+    XZ_CNMFE_batch(exp_directories{id}, file_names{id});
+    close all;
+    clearvars -except exp_directories file_names id
+    pause(1);
+end

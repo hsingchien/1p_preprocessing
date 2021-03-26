@@ -57,6 +57,11 @@ elseif strcmpi(ext,'.avi')
         end
         num2read = min(num2read,v.Duration*v.FrameRate-sframe+1);
         Y1 = readFrame(v);
+        % take RGB into consideration XZ
+        if length(size(Y1)) == 3;
+            Y1 = rgb2gray(Y1);
+        end
+        % end of edit
         imData = zeros(v.Height,v.Width,round(num2read),'like',Y1);
         i = 1;
         if sframe == 1
@@ -64,6 +69,11 @@ elseif strcmpi(ext,'.avi')
         end
         while hasFrame(v)  && (i - sframe + 1 < num2read)
             video = readFrame(v);
+            % RGB? XZ
+            if length(size(video)) == 3
+                video = rgb2gray(video);
+            end
+            % end of edit
             i = i + 1;
             if i >= sframe
                 imData(:,:,i-sframe+1) = video;

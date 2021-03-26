@@ -23,11 +23,11 @@ end
 
 %% if RGB avi is produced convert the video to gray scale
 
-% aviRGBtoGray(pwd, '', 'msCam', '');
+aviRGBtoGray(pwd, '', 'msCam', '');
 
 %% Parameters
 spatial_downsampling = 2; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
-isnonrigid = true; % If true, performs non-rigid registration (slower). If false, rigid alignment (faster).
+isnonrigid = false; % If true, performs non-rigid registration (slower). If false, rigid alignment (faster).
 analyse_behavior = false;
 copy_to_googledrive = false;
 if copy_to_googledrive;
