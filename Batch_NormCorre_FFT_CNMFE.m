@@ -25,7 +25,7 @@ for i = 1:length(RawInputDir)
    XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
    % this will generate a 'processed' folder containing the motion
    % corrected & downsampled video as 'msvideo_corrected.avi'
-   clearvars -except RawInputDir downsample_ratio isnonrigid i;
+   clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT;
    cd('processed\');
    %% FFT video generation
    if ~doFFT
