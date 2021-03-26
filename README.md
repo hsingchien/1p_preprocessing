@@ -13,7 +13,7 @@ This is the main script to batch process the videos. It does Motion Correction (
 4. Make sure JAVA is allowed to use maximum memory (change this in matlab preferences -> General -> JAVA Heap Memory)
 5. Make sure in matlab preferences -> General -> MAT-Files, MATLAB Version 7.3 or later is selected
 6. Make sure you cloned the entire repository and have run Initialize.m (or make sure the toolboxes and other necessaties are added to the path)
-7. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models and Image processing toolbox  
+7. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models, Image processing toolbox, Signal processing toolbox.
 8. If you have 'out of memory' error, try using less cores in parallel computing settings  
 
 After Batch_NormCorre_FFT_CNMFE, you will get a ms.mat, which contains all the outputs. In ms.mat,  
@@ -34,7 +34,7 @@ These are the key parameters you want to focus:
 Once you are happy with the paramters, rerun CNMFE <p><code>XZ_CNMFE_batch(dirName, vName)</code></p> dirName is the folder path containing the video file you want to run CNMFE , vName is the filename of this video file (usually msvideo_FFT.avi or msvideo_corrected.avi). Follow the guide to finish CNMFE. Be sure to backup any outputs from previous CNMFE runs if you want, as this might overwrite old ms.mat. 
 
 # Cell Screening
-Once you get ms.mat, you want to do a screening. Label the good ones and bad ones.
+Once you get ms.mat, you want to do screening. Label the good ones and bad ones.
 There are 2 tools you can use.
 ## FastScreener
 <p><code>FastScreener;</code></p>
