@@ -1,5 +1,5 @@
 %% test
-function XZ_CNMFE_batch(dirName, vName)
+function XZ_CNMFE_batch(dirName, vName, CNMFE_opt)
 %% Run Initialize first to add pathes to necessary toolboxes
 
 
@@ -158,6 +158,7 @@ else
 end
 
 display('Step 3: CNMFE');
+ms.CNMFE_opt = CNMFE_opt;
 ms = msRunCNMFE_large_batch(ms);
 msExtractSFPs(ms); % Extract spatial footprints for subsequent re-alignement
 

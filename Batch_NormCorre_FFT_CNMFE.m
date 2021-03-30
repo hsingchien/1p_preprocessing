@@ -7,16 +7,41 @@
 % Reject cells with CellScreener after this. 
 
 
-%% Set paths to your raw videos
-
+%% Set paths to your raw videos and options for normcorre and fft
+% IMPORTANT: Before you run, make sure the videos are visually consistent. 
+% Bad frames caused by miniscope failure should be removed before starting 
+% this script, otherwise CNMFE will throw errors.
 RawInputDir = {
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope1_XZ70';
     'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope2_XZ71';
     'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope1_XZ70';
     'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope2_XZ71';
     };
-downsample_ratio = 2;
+downsample_ratio = 1;
 isnonrigid = false;
 doFFT = true; % set false if you want to run CNMFE on motion corrected raw video
+%% cnmfe parameters
+CNMFE_options = struct(...
+'Fs', 30,... % frame rate
+'tsub', 1,... % temporal downsampling factor
+'gSig', 3,... % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
+'gSiz', 12,... % pixel, neuron diameter
+'nk', 3,...
+...% background model
+'bg_model', 'ring',... % model of the background {'ring', 'svd'(default), 'nmf'}
+'nb', 1,...             % number of background sources for each patch (only be used in SVD and NMF model)
+'ring_radius', 16,...  % when the ring model used, it is the radius of the ring used in the background model.
+...% merge
+'merge_thr', 0.65,...
+'merge_thr_spatial', [0.5,0.1,-Inf],...% thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
+'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
+...% initialize
+'min_corr', 0.7,... % minimum local correlation for a seeding pixel, default 0.8
+'min_pnr', 15,... % minimum peak-to-noise ratio for a seeding pixel
+...% residual
+'min_corr_res', 0.8,... 
+'min_pnr_res', 12);
+
 %% Start batch
 for i = 1:length(RawInputDir)
    
@@ -25,7 +50,7 @@ for i = 1:length(RawInputDir)
    XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
    % this will generate a 'processed' folder containing the motion
    % corrected & downsampled video as 'msvideo_corrected.avi'
-   clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT;
+   clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT CNMFE_options;
    cd('processed\');
    %% FFT video generation
    if ~doFFT
@@ -184,10 +209,10 @@ for i = 1:length(RawInputDir)
         close(C);
         close(C2);
         ij.IJ.run("Quit","");
-        clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT vName;
+        clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT vName CNMFE_options;
         close all;
    end
     %% CNMFE on FFT output
-    XZ_CNMFE_batch(pwd, vName);
+    XZ_CNMFE_batch(pwd, vName, CNMFE_options);
 
 end
