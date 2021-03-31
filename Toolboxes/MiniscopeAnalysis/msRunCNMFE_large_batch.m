@@ -26,8 +26,8 @@ pars_envs = struct('memory_size_to_use', 94, ...   % GB, memory space you allow 
     'patch_dims', [64, 64]);  %GB, patch size
 % -------------------------      SPATIAL      -------------------------  %
 include_residual = false; % If true, look for neurons in the residuals
-gSig = 3;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 9;          % pixel, neuron diameter
+gSig = ms.CNMFE_opt.gSig;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
+gSiz = ms.CNMFE_opt.gSiz;          % pixel, neuron diameter
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not
 if with_dendrites
@@ -45,8 +45,8 @@ spatial_constraints = struct('connected', true, 'circular', false);  % you can i
 spatial_algorithm = 'hals_thresh';
 
 % -------------------------      TEMPORAL     -------------------------  %
-Fs = 30;             % frame rate
-tsub = 1;           % temporal downsampling factor
+Fs = ms.CNMFE_opt.Fs;             % frame rate
+tsub = ms.CNMFE_opt.tsub;           % temporal downsampling factor
 deconv_flag = true; % Perform deconvolution
 deconv_options = struct('type', 'ar1', ... % model of the calcium traces. {'ar1', 'ar2'}
     'method', 'foopsi', ... % method for running deconvolution {'foopsi', 'constrained', 'thresholded'}
@@ -55,29 +55,29 @@ deconv_options = struct('type', 'ar1', ... % model of the calcium traces. {'ar1'
     'optimize_b', true, ...% optimize the baseline);
     'max_tau', 100);    % maximum decay time (unit: frame);
 
-nk = 3;             % detrending the slow fluctuation. usually 1 is fine (no detrending)
+nk = ms.CNMFE_opt.nk;             % detrending the slow fluctuation. usually 1 is fine (no detrending)
 % when changed, try some integers smaller than total_frame/(Fs*30)
 detrend_method = 'spline';  % compute the local minimum as an estimation of trend.
 
 % -------------------------     BACKGROUND    -------------------------  %
-bg_model = 'ring';  % model of the background {'ring', 'svd'(default), 'nmf'}
-nb = 1;             % number of background sources for each patch (only be used in SVD and NMF model)
-ring_radius = 16;  % when the ring model used, it is the radius of the ring used in the background model.
+bg_model = ms.CNMFE_opt.bg_model;  % model of the background {'ring', 'svd'(default), 'nmf'}
+nb = ms.CNMFE_opt.nb;             % number of background sources for each patch (only be used in SVD and NMF model)
+ring_radius = ms.CNMFE_opt.ring_radius;  % when the ring model used, it is the radius of the ring used in the background model.
 %otherwise, it's just the width of the overlapping area
 num_neighbors = []; % number of neighbors for each neuron
 
 % -------------------------      MERGING      -------------------------  %
 show_merge = false;  % if true, manually verify the merging step
-merge_thr = 0.65;     % thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
+merge_thr = ms.CNMFE_opt.merge_thr;     % thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
 method_dist = 'max';   % method for computing neuron distances {'mean', 'max'}
-dmin = 3;       % minimum distances between two neurons. it is used together with merge_thr
+dmin = ms.CNMFE_opt.dmin;       % minimum distances between two neurons. it is used together with merge_thr
 dmin_only = 2;  % merge neurons if their distances are smaller than dmin_only.
-merge_thr_spatial = [0.3, 0.1, -inf];  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
+merge_thr_spatial = ms.CNMFE_opt.merge_thr_spatial;  % merge components with highly correlated spatial shapes (corr=0.8) and small temporal correlations (corr=0.1)
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible.
-min_corr = 0.8;     % minimum local correlation for a seeding pixel, default 0.8
-min_pnr = 20;       % minimum peak-to-noise ratio for a seeding pixel
+min_corr = ms.CNMFE_opt.min_corr;     % minimum local correlation for a seeding pixel, default 0.8
+min_pnr = ms.CNMFE_opt.min_pnr;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = gSig^2;      % minimum number of nonzero pixels for each neuron
 bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames
@@ -89,8 +89,8 @@ center_psf = true;  % set the value as true when the background fluctuation is l
 % set the value as false when the background fluctuation is small (2p)
 
 % -------------------------  Residual   -------------------------  %
-min_corr_res = 0.8; % Default 0.7
-min_pnr_res = 17;
+min_corr_res = ms.CNMFE_opt.min_corr_res; % Default 0.7
+min_pnr_res = ms.CNMFE_opt.min_pnr_res;
 seed_method_res = 'auto';  % method for initializing neurons from the residual
 update_sn = true;
 
@@ -125,9 +125,9 @@ neuron.updateParams('gSig', gSig, ...       % -------- spatial --------
     'center_psf', center_psf);
 neuron.Fs = Fs;
 %% save a record for key parameters in ms
-ms.CNMFE_params = struct('Fs',Fs, 'tsub', tsub,'deconv',deconv_options,'gSig', gSig, 'gSiz', gSiz,...
-    'nk', nk,'merge_thr', merge_thr,'merge_thr_spatial',merge_thr_spatial,'dmin',dmin,'min_corr',min_corr,...
-    'min_pnr',min_pnr,'min_corr_res',min_corr_res, 'min_pnr_res', min_pnr_res);
+% ms.CNMFE_params = struct('Fs',Fs, 'tsub', tsub,'deconv',deconv_options,'gSig', gSig, 'gSiz', gSiz,...
+%     'nk', nk,'merge_thr', merge_thr,'merge_thr_spatial',merge_thr_spatial,'dmin',dmin,'min_corr',min_corr,...
+%     'min_pnr',min_pnr,'min_corr_res',min_corr_res, 'min_pnr_res', min_pnr_res);
 %% distribute data and be ready to run source extraction
 neuron.getReady(pars_envs);
 
