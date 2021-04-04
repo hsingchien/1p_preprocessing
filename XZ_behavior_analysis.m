@@ -5,8 +5,7 @@ sep = '/';
 xz_folder = 'C:/Users/HonglabUser/Dropbox/XZ_projects/ToolBoxes';
 sep = '/';
 %% behavior analysis
-addpath(genpath([xz_folder, sep, 'Behav_toolbox/']),...
-    genpath([xz_folder, sep, 'mmread/']));
+addpath(genpath(xz_folder));
 %% utility funcs home
 addpath(genpath('D:/Matlab Repo/XZ_funkies'));
 %% utility funcs lab
@@ -29,9 +28,11 @@ annot_f = 'behavior.txt'
 A = behaviorData('load', annot_f);
 
 %% construct experiment struct
-expInfo = {'SH19_HCsep2','SH21_HCsep1'};
-ms_f1 = strrep('E:\MiniscopeData(processed)\NewCage_free_dual\DW22_XZ46\11_39_46_01_21_21\Miniscope_1_DW22\ms.mat','\','/');
-ms_f2 = strrep('E:\MiniscopeData(processed)\NewCage_free_dual\DW22_XZ46\11_39_46_01_21_21\Miniscope_0_XZ46\ms.mat','\','/');
-E_struct = ExpstructGen(expInfo, ms_f1, ms_f2, A);save(strrep('E:\MiniscopeData(processed)\NewCage_free_dual\DW22_XZ46\11_39_46_01_21_21\E_struct.mat','\','/'),'E_struct');
+expInfo = {'XZ70_HCexp1','XZ71_HCexp1'};
+ms_f1 = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope1_XZ70\processed\ms_cleaned.mat';
+ms_f2 = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope2_XZ71\processed\ms_cleaned.mat';
+E_struct = ExpstructGen(expInfo, ms_f1, ms_f2, A);
+save('E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\E_struct.mat','E_struct');
 %% Plot all cells with behavior patched
 PlotSelectedCells(E_struct{1}, 1:100, false)
+PlotSelectedCells(E_struct{2}, 1:100, false)
