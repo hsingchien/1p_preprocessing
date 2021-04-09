@@ -12,10 +12,10 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope1_XZ70';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_27_16\Miniscope2_XZ71';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope1_XZ70';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope2_XZ71';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_00_38_04_02_21\Miniscope1_XZ70';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_00_38_04_02_21\Miniscope2_XZ71';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_16_01_04_02_21\Miniscope1_XZ70';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_16_01_04_02_21\Miniscope2_XZ71';
     };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -36,11 +36,11 @@ CNMFE_options = struct(...
 'merge_thr_spatial', [0.5,0.1,-Inf],...% thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
-'min_corr', 0.7,... % minimum local correlation for a seeding pixel, default 0.8
-'min_pnr', 15,... % minimum peak-to-noise ratio for a seeding pixel
+'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8
+'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel
 ...% residual
-'min_corr_res', 0.8,... 
-'min_pnr_res', 12);
+'min_corr_res', 0.7,... 
+'min_pnr_res', 19);
 
 %% Start batch
 for i = 1:length(RawInputDir)
@@ -214,5 +214,5 @@ for i = 1:length(RawInputDir)
    end
     %% CNMFE on FFT output
     XZ_CNMFE_batch(pwd, vName, CNMFE_options);
-
+    FFTTraces('msvideo_dFF.avi', 'ms.mat',0.8,true);
 end
