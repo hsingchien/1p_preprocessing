@@ -1,25 +1,27 @@
-function vmat_total = VideoCombine(dir_f, vtype, sa, savetype)
+function vmat_total = VideoCombine(dir_f, vtype, t_downsample, sa, savetype)
 % input: 
 % VideoCombine(dir_f, vtype, sa, savetype)
 % dir_f, directory of target video files, default .avi files named in order
 % starting from 0. 
 % vtype, 'mat' or 'avi'
+% t_downsample, temporal downsample ratio, default 1(no downsample)
 % sa, save or not, default false
 % savetype, output file type, 'avi' or 'mat'
 
 if nargin < 2
     vtype = 'm';
     sa = false;
-    savetype = 'mat';
+    t_downsample = 1;
+    savetype = 'avi';
 elseif nargin < 3
     sa = false;
-    savetype = 'mat';
+    t_downsample = 1;
+    savetype = 'avi';
 elseif nargin < 4
-    if strcmp(vtype, 'm')
-        savetype = 'mat';
-    else
-        savetype = 'avi';
-    end
+    sa = false;
+    savetype = 'avi';
+elseif nargin < 5
+    savetype = 'avi';
 end
 
 if ~(strcmp(vtype, 'b') | strcmp(vtype, 'm'))
@@ -53,6 +55,7 @@ end
     xwidth = v.Width;
     ywidth = v.Height;
     frame_per_file = v.NumFrames;
+    fr = round(v.FrameRate);
     vmat_total = zeros(ywidth, xwidth, frame_per_file * length(avi_names), 'uint8');
     total_f = 0;
     fprintf('combining %d video files...\n', length(avi_names));
@@ -77,6 +80,39 @@ end
        fprintf('%.2f s remaining...\n', (length(avi_names) - i)*toc);
        delete(v);   
     end
+    % temporal downsample
+    
+    if t_downsample > 1
+        total_frame = size(vmat_total,3);
+        frame_to_down_sample = total_frame - mod(total_frame, t_downsample);
+        vmat_down = squeeze(uint8(mean(reshape(vmat_total(:,:,1:frame_to_down_sample), ywidth, xwidth, t_downsample, []),3)));
+            % also downsample timeStamp file
+        if isfile([dir_f,'\timeStamps.csv']) & sa
+            tStamp = csvread([dir_f,'\timeStamps.csv'],1);
+            tStamp_ds = transpose(reshape(tStamp(1:frame_to_down_sample,2),2,[]));
+            tStamp_ds = mean(tStamp_ds,2);
+            to_write = [transpose(0:1:size(vmat_down,3)-1),tStamp_ds];
+            to_write = array2table(to_write);
+            to_write.Properties.VariableNames(1:2) = {'Frame Number','Time Stamp (ms)'};
+            writetable(to_write,'timeStamps_ds.csv');
+            fprintf('downsampled time stamp csv is stored as timeStamp_ds.csv! \n');
+        end
+        % also downsample headOrientation file
+        if isfile([dir_f,'\timeStamps.csv']) & sa
+            headori = csvread([dir_f,'\headOrientation.csv'],1);
+            headori_ds = squeeze(mean(reshape(headori(1:frame_to_down_sample,:),2,[],size(headori,2)),1));
+            headori_ds = array2table(headori_ds);
+            headori_ds.Properties.VariableNames(1:5) = {'Time Stamp (ms)','qw','qx','qy','qz'};
+            writetable(headori_ds,'headOrientation_ds.csv');
+            fprintf('downsampled headOrientation csv is stored as headOrientation_ds.csv! \n');
+            
+        end
+    end
+    
+    
+
+        
+    
     if sa
         if strcmp(savetype, 'mat')
             fprintf('saving to .mat file at %s...\n', dir_f);
@@ -92,9 +128,18 @@ end
             else
                 viw = VideoWriter([dir_f '/behav_video.avi'], 'Motion JPEG AVI');
             end
+            viw.FrameRate = 15;%fr/t_downsample;
             open(viw);
-            for i = 1:size(vmat_total,3)
-                writeVideo(viw, vmat_total(:,:,i));
+            if t_downsample > 1
+                for i = 1:size(vmat_down,3)
+                    writeVideo(viw, vmat_down(:,:,i));
+                end
+                fprintf('downsampled concatenated video saved!\n');
+            else
+                for i = 1:size(vmat_total,3)
+                    writeVideo(viw, vmat_total(:,:,i));
+                end
+                fprintf('original sized concatenated video saved!\n');
             end
             close(viw);
             delete(viw);
