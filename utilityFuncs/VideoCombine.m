@@ -128,8 +128,13 @@ end
             else
                 viw = VideoWriter([dir_f '/behav_video.avi'], 'Motion JPEG AVI');
             end
-            viw.FrameRate = 15;%fr/t_downsample;
+            if strcmp(vtype, 'b')
+                viw.FrameRate = 30;
+            else
+                viw.FrameRate = 15;
+            end
             open(viw);
+            
             if t_downsample > 1
                 for i = 1:size(vmat_down,3)
                     writeVideo(viw, vmat_down(:,:,i));

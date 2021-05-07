@@ -12,17 +12,15 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_00_38_04_02_21\Miniscope1_XZ70';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_00_38_04_02_21\Miniscope2_XZ71';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_16_01_04_02_21\Miniscope1_XZ70';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_16_01_04_02_21\Miniscope2_XZ71';
+'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ91_XZ87(m)\2021_04_30\15_48_24_sep\Miniscop3_XZ87';
+'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ91_XZ87(m)\2021_04_30\15_59_33_exp\Miniscop3_XZ87';
     };
 downsample_ratio = 1;
 isnonrigid = false;
 doFFT = true; % set false if you want to run CNMFE on motion corrected raw video
 %% cnmfe parameters
 CNMFE_options = struct(...
-'Fs', 30,... % frame rate
+'Fs', 15,... % frame rate
 'tsub', 1,... % temporal downsampling factor
 'gSig', 3,... % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
 'gSiz', 12,... % pixel, neuron diameter
@@ -36,11 +34,11 @@ CNMFE_options = struct(...
 'merge_thr_spatial', [0.5,0.1,-Inf],...% thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
-'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8
-'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel
+'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
+'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel, cmk--21, gaba 12
 ...% residual
-'min_corr_res', 0.7,... 
-'min_pnr_res', 19);
+'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
+'min_pnr_res', 19); % cmk 19 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)

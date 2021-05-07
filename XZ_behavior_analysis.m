@@ -23,16 +23,16 @@ seqIo([seqName],'frImgs',struct('codec','png'),'aviName',[aviName]);
 behavior_annotator;
 
 %% construct behavior struct
-annot_f = 'behavior.txt'
+annot_f = 'behavior.txt';
 
 A = behaviorData('load', annot_f);
 
 %% construct experiment struct
-expInfo = {'XZ70_HCexp1','XZ71_HCexp1'};
-ms_f1 = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope1_XZ70\processed\ms_cleaned.mat';
-ms_f2 = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\Miniscope2_XZ71\processed\ms_cleaned.mat';
+expInfo = {'XZ70_HCexp2','XZ71_HCexp2'};
+ms_f1 = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\04_02_21\14_16_01_04_02_21_exp\Miniscope1_XZ70\processed\ms.mat';
+ms_f2 = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\04_02_21\14_16_01_04_02_21_exp\Miniscope2_XZ71\processed\ms_cleaned.mat';
 E_struct = ExpstructGen(expInfo, ms_f1, ms_f2, A);
-save('E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\14_39_09\E_struct.mat','E_struct');
+save('E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\04_02_21\14_16_01_04_02_21_exp\E_struct.mat','E_struct');
 %% Plot all cells with behavior patched
-PlotSelectedCells(E_struct{1}, 1:100, false)
-PlotSelectedCells(E_struct{2}, 1:100, false)
+PlotSelectedCells(E_struct{1}, 1:100, 'attack', false)
+PlotSelectedCells(E_struct{2}, 1:100, 'attack', false)
