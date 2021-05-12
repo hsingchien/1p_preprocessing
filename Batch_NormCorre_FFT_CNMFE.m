@@ -12,8 +12,8 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ91_XZ87(m)\2021_04_30\15_48_24_sep\Miniscop3_XZ87';
-'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ91_XZ87(m)\2021_04_30\15_59_33_exp\Miniscop3_XZ87';
+'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ91_XZ87(m)\2021_04_30\15_48_24_sep\Miniscope2_XZ91';
+'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ91_XZ87(m)\2021_04_30\15_59_33_exp\Miniscope2_XZ91';
     };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -35,10 +35,10 @@ CNMFE_options = struct(...
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
 'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel, cmk--21, gaba 12
+'min_pnr', 12,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 19); % cmk 19 gaba 10
+'min_pnr_res', 10); % cmk 19 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
@@ -212,5 +212,5 @@ for i = 1:length(RawInputDir)
    end
     %% CNMFE on FFT output
     XZ_CNMFE_batch(pwd, vName, CNMFE_options);
-    FFTTraces('msvideo_dFF.avi', 'ms.mat',0.8,true);
+    FFTTraces('msvideo_corrected.avi', 'ms.mat',0.8,true);
 end
