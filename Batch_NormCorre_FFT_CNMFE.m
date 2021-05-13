@@ -212,5 +212,5 @@ for i = 1:length(RawInputDir)
    end
     %% CNMFE on FFT output
     XZ_CNMFE_batch(pwd, vName, CNMFE_options);
-    FFTTraces('msvideo_corrected.avi', 'ms.mat',0.8,true);
+    FFTTraces('msvideo_dFF_crop.avi', 'ms.mat',0.8,true);
 end

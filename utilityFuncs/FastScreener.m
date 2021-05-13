@@ -32,7 +32,7 @@ function  clabel = FastScreener(ms)
     setappdata(fi, 'clabel', clabel);
     setappdata(fi, 'path', msfold);
     ax = axes('Parent', fi);
-    phandle = plot((1:size(traces,1))/30,traces(:,cur_c),'Parent',gca);
+    phandle = plot((1:size(traces,1))/15,traces(:,cur_c),'Parent',gca);
     setappdata(fi, 'phandle', phandle);
     ctitle = title(ax, ['cell#', num2str(cur_c),'/',num2str(num_c)]);
     if clabel(cur_c) == 0
