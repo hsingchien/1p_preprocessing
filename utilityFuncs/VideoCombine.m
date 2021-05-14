@@ -98,7 +98,7 @@ end
             fprintf('downsampled time stamp csv is stored as timeStamp_ds.csv! \n');
         end
         % also downsample headOrientation file
-        if isfile([dir_f,'\timeStamps.csv']) & sa
+        if isfile([dir_f,'\headOrientation.csv']) & sa
             headori = csvread([dir_f,'\headOrientation.csv'],1);
             headori_ds = squeeze(mean(reshape(headori(1:frame_to_down_sample,:),2,[],size(headori,2)),1));
             headori_ds = array2table(headori_ds);

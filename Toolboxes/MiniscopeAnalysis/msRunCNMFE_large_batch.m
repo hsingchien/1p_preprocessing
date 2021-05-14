@@ -49,11 +49,11 @@ Fs = ms.CNMFE_opt.Fs;             % frame rate
 tsub = ms.CNMFE_opt.tsub;           % temporal downsampling factor
 deconv_flag = true; % Perform deconvolution
 deconv_options = struct('type', 'ar1', ... % model of the calcium traces. {'ar1', 'ar2'}
-    'method', 'foopsi', ... % method for running deconvolution {'foopsi', 'constrained', 'thresholded'}
+    'method', 'constrained', ... % method for running deconvolution {'foopsi', 'constrained', 'thresholded'}
     'smin', -5, ...         % minimum spike size. When the value is negative, the actual threshold is abs(smin)*noise level
     'optimize_pars', true, ...  % optimize AR coefficients
     'optimize_b', true, ...% optimize the baseline);
-    'max_tau', 100);    % maximum decay time (unit: frame);
+    'max_tau', 50);    % maximum decay time (unit: frame);
 
 nk = ms.CNMFE_opt.nk;             % detrending the slow fluctuation. usually 1 is fine (no detrending)
 % when changed, try some integers smaller than total_frame/(Fs*30)
@@ -124,10 +124,8 @@ neuron.updateParams('gSig', gSig, ...       % -------- spatial --------
     'bd', bd, ...
     'center_psf', center_psf);
 neuron.Fs = Fs;
-%% save a record for key parameters in ms
-% ms.CNMFE_params = struct('Fs',Fs, 'tsub', tsub,'deconv',deconv_options,'gSig', gSig, 'gSiz', gSiz,...
-%     'nk', nk,'merge_thr', merge_thr,'merge_thr_spatial',merge_thr_spatial,'dmin',dmin,'min_corr',min_corr,...
-%     'min_pnr',min_pnr,'min_corr_res',min_corr_res, 'min_pnr_res', min_pnr_res);
+%% save a record for deconv parameters in ms
+ms.CNMFE_opt.deconv = deconv_options;
 %% distribute data and be ready to run source extraction
 neuron.getReady(pars_envs);
 
