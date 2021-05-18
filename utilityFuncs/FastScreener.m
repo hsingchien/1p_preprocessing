@@ -18,6 +18,7 @@ function  clabel = FastScreener(ms)
     
 
     traces = zscore(ms.RawTraces);
+    filttraces = zscore(ms.FiltTraces);
     if ~isfield(ms, 'cell_label')
         clabel = ones(1,size(traces,2));
     else
@@ -31,6 +32,8 @@ function  clabel = FastScreener(ms)
     setappdata(fi, 'traces', traces);
     setappdata(fi, 'clabel', clabel);
     setappdata(fi, 'path', msfold);
+    setappdata(fi, 'fitraces', filttraces);
+    setappdata(fi, 'rawflag', true);
     ax = axes('Parent', fi);
     phandle = plot((1:size(traces,1))/15,traces(:,cur_c),'Parent',gca);
     setappdata(fi, 'phandle', phandle);
@@ -47,12 +50,19 @@ function KeyFcn(src, event)
     switch event.Key
         case 'a'
             ts = getappdata(src, 'traces');
+            fts = getappdata(src, 'fitraces');
             c = getappdata(src, 'cur_c');
+            rawflag = getappdata(src, 'rawflag');
+            
             c = max(c-1, 1);
             setappdata(src, 'cur_c', c);
             clabel = getappdata(src, 'clabel');
             phandle = getappdata(src, 'phandle');
-            set(phandle, 'YData', ts(:,c));
+            if rawflag
+                set(phandle, 'YData', ts(:,c));
+            else
+                set(phandle, 'Ydata', fts(:,c));
+            end
             ctitle = getappdata(src, 'ctitle');
             set(ctitle, 'String', ['cell#', num2str(c),'/',num2str(getappdata(src,'num_c'))]);
             if clabel(c) == 1
@@ -62,12 +72,18 @@ function KeyFcn(src, event)
             end
         case 'd'
             ts = getappdata(src, 'traces');
+            fts = getappdata(src, 'fitraces');
+            rawflag = getappdata(src, 'rawflag');
             c = getappdata(src, 'cur_c');
             nu = getappdata(src, 'num_c');
             c = min(c+1, nu);
             setappdata(src, 'cur_c', c);
             phandle = getappdata(src, 'phandle');
-            set(phandle, 'YData', ts(:,c));
+            if rawflag
+                set(phandle, 'YData', ts(:,c));
+            else
+                set(phandle, 'YData', fts(:,c));
+            end
             ctitle = getappdata(src, 'ctitle');
             set(ctitle, 'String', ['cell#', num2str(c),'/',num2str(nu)]);
             clabel = getappdata(src, 'clabel');
@@ -91,6 +107,19 @@ function KeyFcn(src, event)
             c_label = getappdata(src, 'clabel');
             msfold = getappdata(src, 'path');
             save([msfold, 'c_label.mat'], 'c_label');
+        case 'r'
+            ts = getappdata(src, 'traces');
+            fts = getappdata(src, 'fitraces');
+            rawflag = getappdata(src, 'rawflag');
+            setappdata(src, 'rawflag', ~rawflag);
+            c = getappdata(src, 'cur_c');
+            phandle = getappdata(src, 'phandle');
+            if ~rawflag
+                set(phandle, 'YData', ts(:,c));
+            else
+                set(phandle, 'YData', fts(:,c));
+            end
+            
     end
             
             

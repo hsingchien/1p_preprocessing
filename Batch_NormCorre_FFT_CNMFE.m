@@ -12,11 +12,10 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ87(m)\2021_04_28\14_03_29_sep\Miniscope3_XZ87';
-'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ87(m)\2021_04_28\14_03_29_sep\Miniscop2_XZ88';
-'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ87(m)\2021_04_28\14_14_56_exp\Miniscope3_XZ87';
-'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ87(m)\2021_04_28\14_14_56_exp\Miniscop2_XZ88';
-
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ70(m)\2021_04_30\13_58_01_sep\Miniscop1_XZ70';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ70(m)\2021_04_30\13_58_01_sep\Miniscope2_XZ88';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ70(m)\2021_04_30\14_10_02_exp\Miniscop1_XZ70';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ70(m)\2021_04_30\14_10_02_exp\Miniscope2_XZ88'
     };
 downsample_ratio = 1;
 isnonrigid = false;
