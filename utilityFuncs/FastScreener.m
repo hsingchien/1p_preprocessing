@@ -36,6 +36,7 @@ function  clabel = FastScreener(ms)
     setappdata(fi, 'rawflag', true);
     ax = axes('Parent', fi);
     phandle = plot((1:size(traces,1))/15,traces(:,cur_c),'Parent',gca);
+    set(ax, 'XLim', [1,size(traces,1)/15]);
     setappdata(fi, 'phandle', phandle);
     ctitle = title(ax, ['cell#', num2str(cur_c),'/',num2str(num_c)]);
     if clabel(cur_c) == 0

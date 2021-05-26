@@ -126,6 +126,7 @@ neuron.updateParams('gSig', gSig, ...       % -------- spatial --------
 neuron.Fs = Fs;
 %% save a record for deconv parameters in ms
 ms.CNMFE_opt.deconv = deconv_options;
+ms.CNMFE_opt.deconv.deconv__flag = deconv_flag;
 %% distribute data and be ready to run source extraction
 neuron.getReady(pars_envs);
 

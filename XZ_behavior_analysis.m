@@ -11,7 +11,7 @@ addpath(genpath('D:/Matlab Repo/XZ_funkies'));
 %% utility funcs lab
 addpath(genpath('D:/Xingjian/Repositories/XZ_funkies'));
 %% combine into 1 video file
-VideoCombine(pwd, 'b', true, 'avi');
+VideoCombine(pwd, 'b',1, true, 'avi');
 
 %% convert avi to seq
 
