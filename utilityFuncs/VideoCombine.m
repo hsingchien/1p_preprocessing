@@ -51,18 +51,24 @@ end
     avi_names = avi_names(forder);
     %% start read each avi by order and combine them into 1 giant .mat file
     %% preallocate the array
-    v = VideoReader(strcat(dir_f, '/', avi_names{1}));
+    vs = cell(1, length(avi_names));
+    total_frame = 0;
+    for k = 1:length(avi_names)
+       tempV = VideoReader(strcat(dir_f, '/', avi_names{k}));
+       vs{k} = tempV;
+       total_frame = total_frame + tempV.NumFrames;
+    end
+    v = vs{1};
+    total_f = 0;
     xwidth = v.Width;
     ywidth = v.Height;
-    frame_per_file = v.NumFrames;
     fr = round(v.FrameRate);
-    vmat_total = zeros(ywidth, xwidth, frame_per_file * length(avi_names), 'uint8');
-    total_f = 0;
+    vmat_total = zeros(ywidth, xwidth, total_frame, 'uint8');
     fprintf('combining %d video files...\n', length(avi_names));
     fprintf('allocated %d GBs of memory...\n', prod(size(vmat_total))/1024/1024/1024);
-    for i = 1:length(avi_names)
+    for i = 1:length(vs)
        tic;
-       v = VideoReader(strcat(dir_f, '/', avi_names{i}));
+       v = vs{i};
        vmat = read(v);  % default last dimension is time 
        if strcmp(vtype, 'b')
            vmat_bw = squeeze(0.2989 * vmat(:,:,1,:) + 0.5870 * vmat(:,:,2,:) + 0.1140 * vmat(:,:,3,:));
@@ -70,10 +76,6 @@ end
            vmat_bw = squeeze(vmat(:,:,1,:));  % in this case, miniscope all 3 channels are the same 
        end
        vmat_total(:,:,total_f+1 : total_f+size(vmat_bw, 3)) = vmat_bw;
-       % remove unused mat frames
-       if i == length(avi_names)
-          vmat_total(:,:,total_f+size(vmat_bw,3)+1:frame_per_file * length(avi_names)) = [];
-       end
        total_f = total_f + size(vmat_bw, 3);
        fprintf('%s is processed\n', avi_names{i});
        fprintf('%d of %d files processed...\n', i, length(avi_names));
