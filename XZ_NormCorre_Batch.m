@@ -33,8 +33,14 @@ ms.ds = spatial_downsampling;
 mkdir(strcat(pwd,separator,analysis_time));
 save([ms.dirName separator 'ms.mat'],'ms');
 %% 2 - Perform motion correction using NormCorre
-display('Step 2: Motion correction'); 
-ms = msNormCorre(ms,isnonrigid);
+display('Step 2: Motion correction');
+if exist('crop.csv')
+    crop_coord = csvread('crop.csv',1,0);
+    crop_coord = crop_coord(end-3:end);
+else
+    crop_coord = [];
+end
+ms = msNormCorre(ms,isnonrigid,crop_coord);
 save('ms_after_registration.mat','ms');
 end
 

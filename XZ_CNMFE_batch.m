@@ -1,5 +1,5 @@
 %% test
-function XZ_CNMFE_batch(dirName, vName, CNMFE_opt)
+function XZ_CNMFE_batch(dirName, vName, CNMFE_opt, ms)
 %% Run Initialize first to add pathes to necessary toolboxes
 
 
@@ -13,10 +13,11 @@ if ispc
 else
     separator = '/'; % For unix (mac, linux) operating systems
 end
-%% if RGB avi is produced convert the video to gray scale
 
-% aviRGBtoGray(pwd, '', 'msCam', '');
 
+if nargin < 4
+    ms = struct();
+end
 %% Parameters
 spatial_downsampling = 1; % (Recommended range: 2 - 4. Downsampling significantly increases computational speed, but verify it does not
 isnonrigid = false; % If true, performs non-rigid registration (slower). If false, rigid alignment (faster).
@@ -32,7 +33,7 @@ ct = clock;
 % analysis_time =strcat(date,'_', num2str(ct(4)),'-',num2str(ct(5)),'-',num2str(floor(ct(6))));
 analysis_time = 'temp';
 %% %% 1 - Create video object and save into matfile
-display('Step 1: Create video object');
+display('******* CNMFE *******');
 % ms = msGenerateVideoObj(pwd,'msCam','avi');
 ms.dirName = dirName;
 ms.vName = vName;
@@ -186,5 +187,8 @@ save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
 %% OPTIONAL put ms into cnn classifier, adjust thereshold to do preliminary cleaning
 [label, scores] = cnn_classifier(ms, '', 0.03);
 ms.cell_label = label;
+if isfield(ms,'vidObj');
+    ms = rmfield(ms, 'vidObj');
+end
 save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
 end

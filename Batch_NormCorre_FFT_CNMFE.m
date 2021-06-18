@@ -12,11 +12,14 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ88_XZ70(m)\2021_04_30\14_10_02_exp\Miniscope2_XZ88'
-    };
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ96_XZ94(m)\XZ94'
+};
 downsample_ratio = 1;
 isnonrigid = false;
-doFFT = true; % set false if you want to run CNMFE on motion corrected raw video
+doNormCorre = false;
+doFFT = false; % set false if you want to run CNMFE on motion corrected raw video
+doCNMFE = true;
+
 %% cnmfe parameters
 CNMFE_options = struct(...
 'Fs', 15,... % frame rate
@@ -34,24 +37,26 @@ CNMFE_options = struct(...
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
 'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
+'min_pnr', 12,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 19); % cmk 19 gaba 10
+'min_pnr_res', 10); % cmk 19 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
-   
+   tic;
    cd(RawInputDir{i});
    %% motion correction
-   XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
-   % this will generate a 'processed' folder containing the motion
-   % corrected & downsampled video as 'msvideo_corrected.avi'
-   clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT CNMFE_options;
+   if doNormCorre
+       ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
+       % this will generate a 'processed' folder containing the motion
+       % corrected & downsampled video as 'msvideo_corrected.avi'
+       clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE CNMFE_options ms;
+   end
    cd('processed\');
    %% FFT video generation
    if ~doFFT
-       vName = 'msvideo_corrected.avi';
+       vName = 'msvideo_dFF.avi'; % FFT already exist
    else
        vName = 'msvideo_dFF.avi';
        addpath 'C:\Program Files (x86)\Fiji.app\scripts'
@@ -206,10 +211,15 @@ for i = 1:length(RawInputDir)
         close(C);
         close(C2);
         ij.IJ.run("Quit","");
-        clearvars -except RawInputDir downsample_ratio isnonrigid i doFFT vName CNMFE_options;
+        clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms;
         close all;
    end
     %% CNMFE on FFT output
-    XZ_CNMFE_batch(pwd, vName, CNMFE_options);
-    FFTTraces('msvideo_dFF.avi', 'ms.mat',0.8,true);
+    if doCNMFE & exist('ms')
+        XZ_CNMFE_batch(pwd, vName, CNMFE_options, ms);
+    elseif doCNMFE
+        XZ_CNMFE_batch(pwd, vName, CNMFE_options);
+    end
+    toc;
+%     FFTTraces('msvideo_dFF.avi', 'ms.mat',0.8,true);
 end

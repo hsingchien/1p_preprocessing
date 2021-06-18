@@ -1,4 +1,4 @@
-function ms = msNormCorre(ms,isnonrigid);
+function ms = msNormCorre(ms,isnonrigid,crop);
 % Performs fast, rigid registration (option for non-rigid also available).
 % Relies on NormCorre (Paninski lab). Rigid registration works fine for
 % large lens (1-2mm) GRIN lenses, while non-rigid might work better for
@@ -15,6 +15,7 @@ if ispc
 else
     separator = '/'; % For unix (mac, linux) operating systems
 end
+
 
 %% Filtering parameters
 gSig = 7/ms.ds;
@@ -75,9 +76,13 @@ for video_i = 1:ms.numFiles;
     
     Mr = apply_shifts(Yf,shifts1,options,bound/2,bound/2); % apply shifts to full dataset
     % apply shifts on the whole movie    
-    
-    writeVideo(writerObj,uint8(Mr));
-    
+    if ~isempty(crop)
+        ybound = min(size(Mr,1), crop(2)+crop(4)+1);
+        xbound = min(size(Mr,2), crop(1)+crop(3)+1);
+        writeVideo(writerObj,uint8(Mr(crop(2)+1:ybound, crop(1)+1:xbound,:)));
+    else
+        writeVideo(writerObj,uint8(Mr));
+    end
     %% compute metrics
     [cYf,mYf,vYf] = motion_metrics(Yf,options.max_shift); 
     [cM1f,mM1f,vM1f] = motion_metrics(Mr,options.max_shift);
@@ -92,7 +97,7 @@ for video_i = 1:ms.numFiles;
     ms.shifts{video_i} = shifts1;
        
 end
-
+ms.crop = crop;
 close(writerObj);
 
 end

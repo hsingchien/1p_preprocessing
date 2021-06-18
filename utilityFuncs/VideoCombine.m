@@ -2,6 +2,7 @@ function vmat_total = VideoCombine(dir_f, vtype, t_downsample, sa, savetype)
 % input: 
 % VideoCombine(dir_f, vtype, sa, savetype)
 % dir_f, directory of target video files, default .avi files named in order
+% vtype, 'm' for miniscope, 'b' for behavior
 % starting from 0. 
 % vtype, 'mat' or 'avi'
 % t_downsample, temporal downsample ratio, default 1(no downsample)

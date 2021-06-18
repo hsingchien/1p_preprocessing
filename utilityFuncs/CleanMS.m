@@ -32,6 +32,9 @@ ms.cell_label = ms.cell_label(c_label>0);
 if isfield(ms,'FFTTraces')
     ms.FFTTraces = ms.FFTTraces(:, c_label>0);
 end
+if isfield(ms,'centroids_xz')
+   ms.centroids_xz = ms.centroids_xz(c_label>0,:); 
+end
 save('ms_cleaned.mat','ms');
 
 
