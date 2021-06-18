@@ -33,10 +33,17 @@ if ~(strcmp(savetype, 'avi') | strcmp(savetype, 'mat'))
     error('invalid saving type');
 end
 
+if ispc
+    separator = '\';
+else
+    separator = '/';
+end
+
+
     %% set the useful constants
     cchannel = 3;
     %%
-    all_v = dir(strcat(dir_f, '/*.avi')); % all_v is a numFile x 1 struct with field name, folder, date, bytes, isdir, datenum
+    all_v = dir(strcat(dir_f, separator,'*.avi')); % all_v is a numFile x 1 struct with field name, folder, date, bytes, isdir, datenum
     % sort files by name, 0, 1, 2, 3, etc.
     avi_cell = struct2cell(all_v); % convert to cell, 6 x numFile
     avi_names = avi_cell(find(strcmp(fields(all_v), 'name')), :);
@@ -55,7 +62,7 @@ end
     vs = cell(1, length(avi_names));
     total_frame = 0;
     for k = 1:length(avi_names)
-       tempV = VideoReader(strcat(dir_f, '/', avi_names{k}));
+       tempV = VideoReader(strcat(dir_f, separator, avi_names{k}));
        vs{k} = tempV;
        total_frame = total_frame + tempV.NumFrames;
     end
@@ -90,8 +97,8 @@ end
         frame_to_down_sample = total_frame - mod(total_frame, t_downsample);
         vmat_down = squeeze(uint8(mean(reshape(vmat_total(:,:,1:frame_to_down_sample), ywidth, xwidth, t_downsample, []),3)));
             % also downsample timeStamp file
-        if isfile([dir_f,'\timeStamps.csv']) & sa
-            tStamp = csvread([dir_f,'\timeStamps.csv'],1);
+        if isfile([dir_f,separator,'timeStamps.csv']) & sa
+            tStamp = csvread([dir_f, separator, 'timeStamps.csv'],1);
             tStamp_ds = transpose(reshape(tStamp(1:frame_to_down_sample,2),2,[]));
             tStamp_ds = mean(tStamp_ds,2);
             to_write = [transpose(0:1:size(vmat_down,3)-1),tStamp_ds];
@@ -101,8 +108,8 @@ end
             fprintf('downsampled time stamp csv is stored as timeStamp_ds.csv! \n');
         end
         % also downsample headOrientation file
-        if isfile([dir_f,'\headOrientation.csv']) & sa
-            headori = csvread([dir_f,'\headOrientation.csv'],1);
+        if isfile([dir_f,separator,'headOrientation.csv']) & sa
+            headori = csvread([dir_f,separator,'headOrientation.csv'],1);
             headori_ds = squeeze(mean(reshape(headori(1:frame_to_down_sample,:),2,[],size(headori,2)),1));
             headori_ds = array2table(headori_ds);
             headori_ds.Properties.VariableNames(1:5) = {'Time Stamp (ms)','qw','qx','qy','qz'};
@@ -120,16 +127,16 @@ end
         if strcmp(savetype, 'mat')
             fprintf('saving to .mat file at %s...\n', dir_f);
             if strcmp(vtype, 'm')
-                save(strcat(dir_f, '/video_total.mat'), 'vmat_total');
+                save(strcat(dir_f, separator, 'video_total.mat'), 'vmat_total');
             else
-                save(strcat(dir_f, '/behav_video.mat'),'vmat_total');
+                save(strcat(dir_f, separator, 'behav_video.mat'),'vmat_total');
             end
         else
             fprintf('saving to .avi file at %s...\n', dir_f);
             if strcmp(vtype, 'm')
-                viw = VideoWriter([dir_f '/msvideo.avi'], 'Grayscale AVI');
+                viw = VideoWriter([dir_f, separator, 'msvideo.avi'], 'Grayscale AVI');
             else
-                viw = VideoWriter([dir_f '/behav_video.avi'], 'Motion JPEG AVI');
+                viw = VideoWriter([dir_f, separator, 'behav_video.avi'], 'Motion JPEG AVI');
             end
             if strcmp(vtype, 'b')
                 viw.FrameRate = 30;
