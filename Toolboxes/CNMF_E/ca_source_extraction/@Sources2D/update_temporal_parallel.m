@@ -41,7 +41,7 @@ fprintf('\n-----------------UPDATE TEMPORAL---------------------------\n');
 % frames to be loaded
 frame_range = obj.frame_range;
 T = diff(frame_range) + 1;
-
+T = round(T);
 % threshold for detecting large residuals
 thresh_outlier = obj.options.thresh_outlier;
 
@@ -139,6 +139,8 @@ if use_parallel
             Ypatch = get_patch_data(mat_data, tmp_patch, frame_range, false);
         end
         [nr_block, nc_block, ~] = size(Ypatch);
+        nr_block = round(nr_block);
+        nc_block = round(nc_block);
         
         % get background
         if strcmpi(bg_model, 'ring')
@@ -156,7 +158,7 @@ if use_parallel
                 % downsample data and reconstruct B^f
                 temp = reshape(bsxfun(@minus, tmp_Y, mean(tmp_Y, 2)), nr_block, nc_block, []);
                 temp = imresize(temp, 1./bg_ssub);
-                Bf = reshape(W_ring*reshape(temp, [], T), d1s, d2s, T);
+                Bf = reshape(W_ring*reshape(temp, [], T), round(d1s), round(d2s), T);
                 Bf = imresize(Bf, [nr_block, nc_block]);
                 Bf = reshape(Bf, [], T);
                 

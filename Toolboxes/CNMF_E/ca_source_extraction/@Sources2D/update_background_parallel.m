@@ -40,7 +40,7 @@ fprintf('\n-----------------UPDATE BACKGROUND---------------------------\n');
 % frames to be loaded for initialization
 frame_range = obj.frame_range;
 T = diff(frame_range) + 1;
-
+T = round(T); % XZ
 % threshold for detecting large residuals
 thresh_outlier = obj.options.thresh_outlier;
 
@@ -218,11 +218,11 @@ if use_parallel
                 [W{mpatch}, b0{mpatch}] = fit_ring_model(Ypatch, A_block, C_block, W_old, thresh_outlier, sn_patch, ind_patch, with_projection);
             else
                 % downsapmle data first
-                temp = reshape(double(Ypatch)-A_block*C_block, nr_block, nc_block, T_block);
+                temp = reshape(double(Ypatch)-A_block*C_block, nr_block, nc_block, T_block); 
                 tmp_b0 = mean(temp, 3);
                 b0{mpatch} = tmp_b0(ind_patch);
                 Ypatch = imresize(temp, 1./bg_ssub, 'nearest');
-                Ypatch = reshape(Ypatch, [], T_block);
+                Ypatch = reshape(Ypatch, [], T_block); 
                 
                 [W{mpatch}, ~] = fit_ring_model(Ypatch, [], [], W_old, thresh_outlier, sn_block(:), [],  with_projection);
                 %                 tmp_b0 = imresize(reshape(tmp_b0, size(sn_block)), [nr_block, nc_block]);

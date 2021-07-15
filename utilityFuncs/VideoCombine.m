@@ -65,6 +65,7 @@ end
        tempV = VideoReader(strcat(dir_f, separator, avi_names{k}));
        vs{k} = tempV;
        total_frame = total_frame + tempV.NumFrames;
+       disp(k);
     end
     v = vs{1};
     total_f = 0;

@@ -80,7 +80,7 @@ for mpatch=1:(nr_patch*nc_patch)
     tmp_patch = patch_pos{mpatch};
     tmp_block = block_pos{mpatch};
     % find the neurons that are within the block
-    mask = zeros(d1, d2);
+    mask = zeros(round(d1), round(d2));
     mask(tmp_block(1):tmp_block(2), tmp_block(3):tmp_block(4)) = 1;
     mask(tmp_patch(1):tmp_patch(2), tmp_patch(3):tmp_patch(4)) = 2;
     % find neurons within the patch
@@ -159,38 +159,38 @@ if use_parallel
             C_patch_prev = C_prev{mpatch};
             W_ring = W{mpatch};
             b0_ring = b0{mpatch};
-            Ypatch = reshape(Ypatch, [], T);
+            Ypatch = reshape(Ypatch, [], round(T));
             tmp_Y = double(Ypatch)-A_patch_prev*C_patch_prev;
             
             if bg_ssub==1
                 Ypatch = bsxfun(@minus, double(Ypatch(ind_patch,:))- W_ring*tmp_Y, b0_ring-W_ring*mean(tmp_Y, 2));
             else
                 % get the dimension of the downsampled data
-                [d1s, d2s] = size(imresize(zeros(nr_block, nc_block), 1/bg_ssub));
+                [d1s, d2s] = size(imresize(zeros(round(nr_block), round(nc_block)), 1/bg_ssub));
                 % downsample data and reconstruct B^f
-                temp = reshape(bsxfun(@minus, tmp_Y, mean(tmp_Y, 2)), nr_block, nc_block, []);
+                temp = reshape(bsxfun(@minus, tmp_Y, mean(tmp_Y, 2)), round(nr_block), round(nc_block), []);
                 temp = imresize(temp, 1./bg_ssub);
-                Bf = reshape(W_ring*reshape(temp, [], T), d1s, d2s, T);
+                Bf = reshape(W_ring*reshape(temp, [], T), round(d1s), round(d2s), round(T));
                 Bf = imresize(Bf, [nr_block, nc_block]);
-                Bf = reshape(Bf, [], T);
+                Bf = reshape(Bf, [], round(T));
                 
                 Ypatch = bsxfun(@minus, double(Ypatch(ind_patch, :)) - Bf(ind_patch, :), b0_ring);
             end
         elseif strcmpi(bg_model, 'nmf')
             b_nmf = b{mpatch};
             f_nmf = f{mpatch};
-            Ypatch = double(reshape(Ypatch, [], T))- b_nmf*f_nmf;
+            Ypatch = double(reshape(Ypatch, [], round(T)))- b_nmf*f_nmf;
         else
             b_svd = b{mpatch};
             f_svd = f{mpatch};
             b0_svd = b0{mpatch};
-            Ypatch = double(reshape(Ypatch, [], T)) - bsxfun(@plus, b_svd*f_svd, b0_svd);
+            Ypatch = double(reshape(Ypatch, [], round(T))) - bsxfun(@plus, b_svd*f_svd, b0_svd);
         end
         
         % using HALS to update spatial components
         if update_sn
             sn_patch = GetSn(Ypatch);
-            sn_new{mpatch} = reshape(sn_patch, nr, nc);
+            sn_new{mpatch} = reshape(sn_patch, round(nr), round(nc));
         end
         if ~flag_neuron
             fprintf('Patch (%2d, %2d) is done. %2d X %2d patches in total. \n', r, c, nr_patch, nc_patch);
@@ -260,38 +260,38 @@ else
             C_patch_prev = C_prev{mpatch};
             W_ring = W{mpatch};
             b0_ring = b0{mpatch};
-            Ypatch = reshape(Ypatch, [], T);
+            Ypatch = reshape(Ypatch, [], round(T));
             tmp_Y = double(Ypatch)-A_patch_prev*C_patch_prev;
             
             if bg_ssub==1
                 Ypatch = bsxfun(@minus, double(Ypatch(ind_patch,:))- W_ring*tmp_Y, b0_ring-W_ring*mean(tmp_Y, 2));
             else
                 % get the dimension of the downsampled data
-                [d1s, d2s] = size(imresize(zeros(nr_block, nc_block), 1/bg_ssub));
+                [d1s, d2s] = size(imresize(zeros(round(nr_block), round(nc_block)), 1/bg_ssub));
                 % downsample data and reconstruct B^f
-                temp = reshape(bsxfun(@minus, tmp_Y, mean(tmp_Y, 2)), nr_block, nc_block, []);
+                temp = reshape(bsxfun(@minus, tmp_Y, mean(tmp_Y, 2)), round(nr_block), round(nc_block), []);
                 temp = imresize(temp, 1./bg_ssub);
-                Bf = reshape(W_ring*reshape(temp, [], T), d1s, d2s, T);
+                Bf = reshape(W_ring*reshape(temp, [], T), round(d1s), round(d2s), round(T));
                 Bf = imresize(Bf, [nr_block, nc_block]);
-                Bf = reshape(Bf, [], T);
+                Bf = reshape(Bf, [], round(T));
                 
                 Ypatch = bsxfun(@minus, double(Ypatch(ind_patch, :)) - Bf(ind_patch, :), b0_ring);
             end
         elseif strcmpi(bg_model, 'nmf')
             b_nmf = b{mpatch};
             f_nmf = f{mpatch};
-            Ypatch = double(reshape(Ypatch, [], T))- b_nmf*f_nmf;
+            Ypatch = double(reshape(Ypatch, [], round(T)))- b_nmf*f_nmf;
         else
             b_svd = b{mpatch};
             f_svd = f{mpatch};
             b0_svd = b0{mpatch};
-            Ypatch = double(reshape(Ypatch, [], T)) - bsxfun(@plus, b_svd*f_svd, b0_svd);
+            Ypatch = double(reshape(Ypatch, [], round(T))) - bsxfun(@plus, b_svd*f_svd, b0_svd);
         end
         
         % using HALS to update spatial components
         if update_sn
             sn_patch = GetSn(Ypatch);
-            sn_new{mpatch} = reshape(sn_patch, nr, nc);
+            sn_new{mpatch} = reshape(sn_patch, round(nr), round(nc));
         end
         if ~flag_neuron
             fprintf('Patch (%2d, %2d) is done. %2d X %2d patches in total. \n', r, c, nr_patch, nc_patch);
@@ -319,7 +319,7 @@ end
 
 %% collect results
 K = size(obj.A, 2);
-A_ = zeros(d1, d2, K);
+A_ = zeros(round(d1), round(d2), round(K));
 fprintf('Collect results from all small patches...\n');
 for mpatch=1:(nr_patch*nc_patch)
     A_patch = A_new{mpatch};
@@ -329,7 +329,7 @@ for mpatch=1:(nr_patch*nc_patch)
     ind_patch = ind_neurons{mpatch};
     for m=1:length(ind_patch)
         k = ind_patch(m);
-        A_(tmp_pos(1):tmp_pos(2), tmp_pos(3):tmp_pos(4), k) = reshape(A_patch(:, m), nr, nc, 1);
+        A_(tmp_pos(1):tmp_pos(2), tmp_pos(3):tmp_pos(4), k) = reshape(A_patch(:, m), round(nr), round(nc), 1);
     end
 end
 A_new = sparse(obj.reshape(A_, 1));

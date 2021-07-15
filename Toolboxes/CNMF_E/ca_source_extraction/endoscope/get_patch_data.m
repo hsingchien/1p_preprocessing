@@ -67,7 +67,7 @@ nframes = diff(frame_range)+1;
 nr_block = length(block_idx_r) - 1;
 nc_block = length(block_idx_c) - 1;
 
-Y = zeros(nr, nc, nframes, 'like', cast(0,dtype));
+Y = zeros(round(nr), round(nc), round(nframes), 'like', cast(0,dtype));
 block_rstart = block_idx_r(1)-1;
 block_cstart = block_idx_c(1)-1;
 for m=1:nr_block

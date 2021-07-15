@@ -12,7 +12,9 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ96_XZ94(m)\XZ94'
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ84_XZ83(m)\2021_04_20\XZ84';
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ97_XZ91(m)\2021_05_27\XZ97';
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ85_XZ83(m)\2021_04_22\XZ85';
 };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -46,6 +48,10 @@ CNMFE_options = struct(...
 for i = 1:length(RawInputDir)
    tic;
    cd(RawInputDir{i});
+   if i>2
+       doNormCorre = true;
+       doFFT = true;
+   end
    %% motion correction
    if doNormCorre
        ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
