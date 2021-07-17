@@ -11,10 +11,9 @@ This is the main script to batch process the videos. It does Motion Correction (
 2. Make sure matlab can read the videos (you may need to download codec, e.g. [K-Lite Codec Pack](https://codecguide.com/download_kl.htm) ). 
 3. Follow guide of ImageJ to install plugins required and edit the path to ImageJ directory in the script
 4. Make sure JAVA is allowed to use maximum memory (change this in matlab preferences -> General -> JAVA Heap Memory)
-5. Make sure in matlab preferences -> General -> MAT-Files, MATLAB Version 7.3 or later is selected
-6. Make sure you cloned the entire repository and have run Initialize.m (or make sure the toolboxes and other necessaties are added to the path)
-7. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models, Image processing toolbox, Signal processing toolbox.
-8. If you have 'out of memory' error, try using less cores in parallel computing settings  
+5. Make sure you cloned the entire repository and have run Initialize.m (or make sure the toolboxes and other necessaties are added to the path)
+6. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models, Image processing toolbox, Signal processing toolbox.
+7. If you have 'out of memory' error, try using less cores in parallel computing settings  
 
 After Batch_NormCorre_FFT_CNMFE, you will get a ms.mat, which contains all the outputs. In ms.mat,  
 RawTraces -- raw GCaMP video signal trace  
