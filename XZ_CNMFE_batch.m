@@ -40,7 +40,7 @@ ms.vName = vName;
 ms.analysis_time = analysis_time;
 ms.ds = spatial_downsampling;
 mkdir(strcat(pwd,separator,analysis_time));
-save([ms.dirName separator 'ms.mat'],'ms');
+save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
 %% 2 - Perform motion correction using NormCorre
 % display('Step 2: Motion correction');
 % 
