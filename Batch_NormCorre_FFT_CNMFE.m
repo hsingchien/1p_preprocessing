@@ -216,6 +216,47 @@ for i = 1:length(RawInputDir)
 
         close(C);
         close(C2);
+            %% Generate report
+        fig = figure(2);
+        clf;
+        subplot(5, 1, 1)
+        hold on;
+        plot(dFFinfo.meanPix)
+        plot(dFFinfo.meanPixSmooth1)
+        plot(dFFinfo.meanPixSmooth2)
+        plot(dFFinfo.meanPixSmooth3)
+        plot(dFFinfo.meanPixSmooth4)
+
+        subplot(5, 1, 2)
+        plot(dFFinfo.meanPixScal)
+
+        subplot(5, 1, 3)
+        plot(zeroNum)
+
+        subplot(5, 1, 4)
+        plot(satuNum)
+
+        if FFT == 1
+            subplot(5, 3, 13)
+            hold on;
+            histogram(histRaw(:))
+
+            subplot(5, 3, 14)
+            hold on;
+            histDffAry = histDff(:);
+            histDffAry2 = histDffAry(histDffAry<255 & histDffAry>0);
+            histogram(histDffAry2)
+
+            subplot(5, 3, 15)
+            hold on;
+            histFftAry = histFFT(:);
+            histFftAry2 = histFftAry(histFftAry<255 & histFftAry>0);
+            histogram(histFftAry2)
+
+        end
+
+        print(fig, '-dpng', '-r300', [videoPath, expInfo, '_dFF.png']);
+        %% Quit ImageJ
         ij.IJ.run("Quit","");
         clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms;
         close all;
