@@ -4,23 +4,24 @@ F = struct();
 MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
-nVideo = 3;
+nVideo = 2;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ86'}; 
-date = cell(nVideo,1); date(:) = {'20210419'};
-session = {'sep';'exp';'exp'};
-time = {'14_09_49'; '14_22_31';'14_42_18'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ98'}; 
+date = cell(nVideo,1); date(:) = {'20210527'};
+session = {'sep';'exp'};
+time = {'14_41_05'; '14_52_14'};
 % path for timestamps
-filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ86_XZ83(m)\2021_04_19\14_09_49_sep\Miniscope1_XZ86';...
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ86_XZ83(m)\2021_04_19\14_22_31_exp\Miniscope1_XZ86';...
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ86_XZ83(m)\2021_04_19\14_42_18_exp\Miniscope1_XZ86'};
+filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ98_XZ89(m)\2021_05_27\14_41_05_sep\Miniscope2_XZ98';...
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ98_XZ89(m)\2021_05_27\14_52_14_exp\Miniscope2_XZ98';...
+    
+    };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ86_XZ83(m)\2021_04_19\XZ86_1';
-fileName = {'msvideo_dFF.avi'; 'msvideo_dFF.avi';'msvideo_dFF.avi'};
-F.ExperimentID = ['PairD2_',date{1},'_F']; % change Pair#
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ98_XZ89(m)\2021_05_27\XZ98';
+fileName = {'msvideo_dFF.avi'; 'msvideo_dFF.avi'};
+F.ExperimentID = ['PairB13_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -57,9 +58,9 @@ for i = 1:nVideo
        case 1
            load([msPath,'\ms_sep.mat']);
        case 2
-           load([msPath,'\ms_exp_1.mat']);
+           load([msPath,'\ms_exp.mat']);
        case 3
-           load([msPath,'\ms_exp_2.mat']);
+           load([msPath,'\ms_sep2.mat']);
               end
    if isfield(ms,'cell_label')
        ms.goodCellVec = ms.cell_label;
@@ -76,10 +77,12 @@ endFrame = cumsum(endFrame);
 startFrame(2:end) = startFrame(2:end)+endFrame(1:end-1);
 totalFrame = endFrame-startFrame+1;
 duration = totalFrame/FPS;
+fprintf('ms done\n');
 %% videoInfo
 F.videoInfo = table(No,MouseID,date,session,...
     time, filePath, fileName,startFrame,...
 endFrame, totalFrame,duration);
+fprintf('videoInfo constructed\n');
 %% align timestamps
 F.TimeStamp.Ts = Ts;
 mapTs = cell(1,nVideo);
@@ -90,8 +93,10 @@ for i = 1:nVideo
     mapTs{i}.M2B = M2B;
 end
 F.TimeStamp.mapTs = mapTs;
+fprintf('timestamp constructed\n');
 %% head orientation
 F.HeadOrientation.qt = qt;
+fprintf('head orientation constructed\n');
 %% Behavior
 Behavior = cell(1,nVideo);
 A={};
@@ -101,6 +106,9 @@ for i = 1:nVideo
     if exist([behavpath,'\behavior.txt'])
         [B,A] = BehavStruExtract([behavpath,'\behavior.txt'], MouseN);
         Behavior{i} = B;
+        fprintf('behavior of session %d constructed!\n',i);
+    else
+        fprintf('behavior annotation not found, session %d left blank\n',i);
     end
 end
 F.Annotation.annBD = A;
@@ -110,8 +118,10 @@ F.Event.VideoEnd = endFrame;
 F.Event.VideoStart = startFrame;
 F.Event.VideoFrame = totalFrame;
 F.Event.VideoDuration = totalFrame/FPS;
+fprintf('Event done.\n');
 %% Event table
 % Place Holder
 %% save F structure
-save(saveName,'F');
+save(saveName,'F','-v7.3');
+fprintf('save complete\n');
 

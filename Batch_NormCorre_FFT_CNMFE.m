@@ -3,7 +3,7 @@
 % First do motion correction using non reigid Normcorre, spatial downsample
 % by 2(default). Corrected video is saved as msvideo_corrected.avi. Then
 % FFT (using ImageJ) on motion corrected & downsampled video. This part of 
-% the code has to be run in base workspace. At last, CNMFE on the FFT video. 
+% the code has  fcv 3to be run in base workspace. At last, CNMFE on the FFT video. 
 % Reject cells with CellScreener after this. 
 
 
@@ -12,9 +12,8 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ84_XZ83(m)\2021_04_20\XZ84';
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ97_XZ91(m)\2021_05_27\XZ97';
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ85_XZ83(m)\2021_04_22\XZ85';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\2021_08_04\XZ112_XZ108(m)\XZ112'
+
 };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -46,12 +45,12 @@ CNMFE_options = struct(...
 
 %% Start batch
 for i = 1:length(RawInputDir)
+   if i > 1
+       doNormCorre = true;
+   end
+       
    tic;
    cd(RawInputDir{i});
-   if i>2
-       doNormCorre = true;
-       doFFT = true;
-   end
    %% motion correction
    if doNormCorre
        ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
@@ -255,7 +254,7 @@ for i = 1:length(RawInputDir)
 
         end
 
-        print(fig, '-dpng', '-r300', [videoPath, expInfo, '_dFF.png']);
+        print(fig, '-dpng', '-r300', [videoPath, '\dFFsummary.png']);
         %% Quit ImageJ
         ij.IJ.run("Quit","");
         clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms;

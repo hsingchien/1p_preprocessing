@@ -17,14 +17,14 @@ for i = 1:2:length(allFs)
     load(allFs{i});
     F.ExperimentID = F.ExperimentID(1:end-2); % remove '_F'
     tempcell{1} = F;
-    if length(F.videoInfo.session) == 2
-        F.videoInfo.session = {'sep';'exp'};
-    end
+%     if length(F.videoInfo.session) == 2
+%         F.videoInfo.session = {'sep';'exp'};
+%     end
     load(allFs{i+1});
     F.ExperimentID = F.ExperimentID(1:end-2); % remove '_F'
-    if length(F.videoInfo.session) == 2
-        F.videoInfo.session = {'sep';'exp'};
-    end
+%     if length(F.videoInfo.session) == 2
+%         F.videoInfo.session = {'sep';'exp'};
+%     end
     tempcell{2} = F;
     allPairs{ceil(i/2)} = tempcell;
     
@@ -36,9 +36,4 @@ for i = 1:length(allPairs)
    end
 end
 
-for i = 1:length(allPairs)
-    for j = 1:2
-        allPairs{i}{j}.videoInfo.session = {'sep';'exp'};
-        allPairs{i}{j}.ExperimentID = allPairs{i}{j}.ExperimentID(1:end-2);
-    end
-end
+

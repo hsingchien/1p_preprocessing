@@ -1,19 +1,19 @@
 %% get ready
 clear all;
 F = struct();
-MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
+MouseN = 1; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
 nVideo = 2;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ84'}; 
-date = cell(nVideo,1); date(:) = {'20210420'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ70'}; 
+date = cell(nVideo,1); date(:) = {'20210402'};
 session = transpose(1:nVideo);
-time = {'16_21_12'; '16_34_54'};
-filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ85_XZ84(m)\2021_04_15\XZ84';...
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\XZ85_XZ84(m)\2021_04_15\XZ84'};
+time = {'14_00_38'; '14_16_01'};
+filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\2021_04_02\14_00_38_sep\Miniscope1_XZ70';...
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ71_XZ70(m)\2021_04_02\14_16_01_exp\Miniscope1_XZ70'};
 fileName = {'msvideo_dFF.avi'; 'msvideo_dFF.avi'};
-F.ExperimentID = ['PairC13_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairC1_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 

@@ -370,7 +370,7 @@ elseif strcmpi(ext,'.avi')
     else
         num2read = min(numFrames-sframe+1, round(varargin{3}));
     end
-    imData = obj.read([sframe, sframe+num2read-1]);
+    imData = obj.read([round(sframe), round(sframe+num2read-1)]);
     imData = squeeze(imData(:, :, 1, :));
 elseif strcmpi(ext, '.mat')
     data = matfile(path_to_file);
