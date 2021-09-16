@@ -12,14 +12,14 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\2021_08_04\XZ112_XZ108(m)\XZ112'
-
+'E:\MiniscopeData(processed)\NewCage_free_dual\PV_S5E2\XZ99_XZ91\2021_07_27\XZ99';
 };
 downsample_ratio = 1;
 isnonrigid = false;
 doNormCorre = false;
-doFFT = false; % set false if you want to run CNMFE on motion corrected raw video
+doFFT = false; % set false if you want to skip FFT
 doCNMFE = true;
+CNMFE_on_raw = true; % set true if you want to run CNMFE on raw
 
 %% cnmfe parameters
 CNMFE_options = struct(...
@@ -38,10 +38,10 @@ CNMFE_options = struct(...
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
 'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 12,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
+'min_pnr', 7,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 10); % cmk 19 gaba 10
+'min_pnr_res', 4); % cmk 19 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
@@ -56,12 +56,14 @@ for i = 1:length(RawInputDir)
        ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
        % this will generate a 'processed' folder containing the motion
        % corrected & downsampled video as 'msvideo_corrected.avi'
-       clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE CNMFE_options ms;
+       clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE CNMFE_options ms CNMFE_on_raw;
    end
    cd('processed\');
    %% FFT video generation
-   if ~doFFT
-       vName = 'msvideo_dFF.avi'; % FFT already exist
+   if and(~doFFT, ~CNMFE_on_raw)
+       vName = 'msvideo_dFF.avi'; % FFT already exist, skip FFT step, run CNMFE on FFT video
+   elseif CNMFE_on_raw
+       vName = 'msvideo_corrected.avi'; % skip FFT, run CNMFE on motion corrected raw video
    else
        vName = 'msvideo_dFF.avi';
        addpath 'C:\Program Files (x86)\Fiji.app\scripts'
@@ -257,7 +259,7 @@ for i = 1:length(RawInputDir)
         print(fig, '-dpng', '-r300', [videoPath, '\dFFsummary.png']);
         %% Quit ImageJ
         ij.IJ.run("Quit","");
-        clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms;
+        clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms CNMFE_on_raw;
         close all;
    end
     %% CNMFE on FFT output

@@ -11,10 +11,14 @@ if ischar(tstamp)
     tstamp = csvread(tstamp, 1);
 end
 
+if size(tstamp,2) == 1 % when only the time(ms) column is fed
+    tstamp = [transpose(0:1:(size(tstamp,1)-1)), tstamp]; 
+end
+
 % c1: frame#, c2, time(in ms), c3, buffer
 % find the average inter frame interval
 dif_tstamp = diff(tstamp(:,2));
-avg_ft = mean(quantile(dif_tstamp,0.25), quantile(dif_tstamp,0.75));
+avg_ft = mean([quantile(dif_tstamp,0.25), quantile(dif_tstamp,0.75)]);
 frame_drop_at = find(round(dif_tstamp/avg_ft)>1);
 frame_drop_num = round(dif_tstamp/avg_ft);
 frame_drop_num = frame_drop_num(frame_drop_at);
@@ -25,6 +29,7 @@ if ~isempty(frame_drop_at)
     end
     % start interpolation
     new_tstamp = interp1(tstamp(:,1),tstamp(:,2),0:1:tstamp(end,1));
+    new_tstamp = reshape(new_tstamp,[],1);
     ms.RawTraces = interp1(tstamp(:,1), ms.RawTraces, 0:1:tstamp(end,1));
     ms.FiltTraces = interp1(tstamp(:,1),ms.FiltTraces,0:1:tstamp(end,1));
     ms.S = transpose(interp1(tstamp(:,1),transpose(ms.S),0:1:tstamp(end,1)));
