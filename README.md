@@ -80,8 +80,11 @@ ms.ds ----- downsample ration. set this to 1 if no downsample is performed.
 10. Input a number greater than 1 in zoom-in text box to have a closer look at the selected ROI. Recommended value = 3. 
 
 **Useful Tips**
-Go through all neurons 1 by 1 is tedious, especially when you have several hundreds of ROIs, but it is recommended you go through all ROIs nonetheless. These tips can speed up this process significantly. 
-Good ROIs and bad ROIs from CNMFE are very easily distinguishable by their shapes. Jump to the peak dF frame and check how the ROI contour fits the cell (use low contour display threshold, e.g. 0.1). If the contour fits perfectly, it is usually a good one, no need for further check, jump to the next one. If the contour only fits part of the cell, there is likely another ROI for the rest part of this cell. Keep the better of the 2. If the ROI contour looks irregular, it is likely a bad one, check the neighboring ROIs.
+Go through all neurons 1 by 1 is tedious, especially when you have several hundreds of ROIs, but it is recommended you go through all ROIs nonetheless. These tips can speed up this process significantly.  
+Good ROIs and bad ROIs from CNMFE are very easily distinguishable by their shapes. Jump to the peak dF frame and check how the ROI contour fits the cell (use low contour display threshold, e.g. 0.1). 
+* If the contour fits perfectly, it is usually a good one, no need for further check, jump to the next one. 
+* If the contour only fits part of the cell, there is likely another ROI for the rest part of this cell. Keep the better of the 2. 
+* If the ROI contour looks irregular, it is likely a bad one, check the neighboring ROIs.  
 At the end of the cell rejection, switch the view of axes 2 to maxproj, toggle visibility of good/bad ROIs, use the MATLAB buit-in zoom in tool and pan tool to do a final quick check. 
 
 
