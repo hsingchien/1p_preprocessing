@@ -13,8 +13,12 @@ This is the main script to batch process the videos. It does Motion Correction (
 4. Make sure JAVA is allowed to use maximum memory (change this in matlab preferences -> General -> JAVA Heap Memory)
 5. Make sure you cloned the entire repository and have run Initialize.m (or make sure the toolboxes and other necessaties are added to the path)
 6. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models, Image processing toolbox, Signal processing toolbox.
-7. If you have 'out of memory' error, try using less cores in parallel computing settings  
+7. If you have 'out of memory' error, set par_size to a smaller number.
 
+**Crop**
+Crop can be easily done automatically AFTER NormCorre (NormCorre is always run on the full video). You need to have a csv file containing X, Y, Width, Height value (in this exact order), saved as 'crop.csv' in the same folder of all the raw videos. The easiest way to do this is using ImageJ. Open ImageJ, go to Analyze -> Set Measurement... , check 'Bounding Rectangle'. Then use rectangle select tool to draw your crop region. Select Analyze -> Measure, make sure BX BY Width Height are the last 4 numbers shown in the table, then save the table as 'crop.csv' in the correct directory. 
+
+**Output**
 After Batch_NormCorre_FFT_CNMFE, you will get a ms.mat, which contains all the outputs. In ms.mat,  
 RawTraces -- raw GCaMP video signal trace  
 FiltTraces -- traces from model-based deconvolution. Usually this is what you want to use for further analysis  
