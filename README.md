@@ -15,7 +15,7 @@ This is the main script to batch process the videos. It does Motion Correction (
 6. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models, Image processing toolbox, Signal processing toolbox.
 7. If you have 'out of memory' error, set par_size to a smaller number.
 
-**Crop**
+**Crop**  
 Crop can be easily done automatically AFTER NormCorre (NormCorre is always run on the full video). You need to have a csv file containing X, Y, Width, Height value (in this exact order), saved as 'crop.csv' in the same folder of all the raw videos. The easiest way to do this is using ImageJ. Open ImageJ, go to Analyze -> Set Measurement... , check 'Bounding Rectangle'. Then use rectangle select tool to draw your crop region. Select Analyze -> Measure, make sure BX BY Width Height are the last 4 numbers shown in the table, then save the table as 'crop.csv' in the correct directory. 
 
 **Output**
@@ -36,7 +36,7 @@ These are the key parameters you want to focus:
 
 Once you are happy with the paramters, rerun CNMFE <p><code>XZ_CNMFE_batch(dirName, vName)</code></p> dirName is the folder path containing the video file you want to run CNMFE , vName is the filename of this video file (usually msvideo_FFT.avi or msvideo_corrected.avi). Follow the guide to finish CNMFE. Be sure to backup any outputs from previous CNMFE runs if you want, as this might overwrite old ms.mat. 
 
-# Cell Screening
+# Cell Screening ##
 Once you get ms.mat, you want to do screening. Label the good ones and bad ones.
 There are 2 tools you can use.
 ## FastScreener
