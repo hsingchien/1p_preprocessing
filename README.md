@@ -87,7 +87,7 @@ Good ROIs and bad ROIs from CNMFE are very easily distinguishable by their shape
 * If the ROI contour looks irregular, it is likely a bad one, check the neighboring ROIs.
 
 
-At the end of the cell rejection, switch the view of axes 2 to maxproj, toggle visibility of good/bad ROIs, use the MATLAB buit-in zoom in tool and pan tool to do a final quick check. 
+At the end of the cell rejection, switch axes 2 to maxproj, toggle visibility of good/bad ROIs, use the MATLAB buit-in zoom in tool and pan tool to do a final quick check. 
 
 
  
