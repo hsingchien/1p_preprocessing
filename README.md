@@ -43,7 +43,7 @@ In the pop-out window, select ms.mat. RawTraces of will be displayed. Good cells
 Keys: 
 - 'a' -- previous cell    
 - 'd' -- next cell    
-- 's' -- save, cell label is saved as 'c_label.mat' in the same directory as ms.mat you selected. Load this and ms.mat, set ms.cell_label to c_label and overwrite the original ms.mat    
+- 's' -- save, cell label is saved as 'c_label.mat' in the same directory as ms.mat you selected. You can then use command <code>CleanMS('ms.mat','c_label.mat');</code> to create a cleaned version of ms, saved as 'ms_cleaned.mat' in the same directory.   
 - 'j' -- toggle cell label    
 
 ## CellScreener
