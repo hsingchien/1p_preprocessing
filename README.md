@@ -44,7 +44,8 @@ Keys:
 - 'a' -- previous cell    
 - 'd' -- next cell    
 - 's' -- save, cell label is saved as 'c_label.mat' in the same directory as ms.mat you selected. You can then use command <code>CleanMS('ms.mat','c_label.mat');</code> to create a cleaned version of ms, saved as 'ms_cleaned.mat' in the same directory.   
-- 'j' -- toggle cell label    
+- 'j' -- toggle cell label 
+- 'r' -- toggle between Raw and Filt traces.   
 
 ## CellScreener
 <p><code>CellScreener;</code></p>
@@ -68,14 +69,20 @@ ms.ds ----- downsample ration. set this to 1 if no downsample is performed.
 5. Select a cell in list 1, click Sort_ROI, list 2 will be sorted by their distance to the cell in list 1. Footprint overlap and temporal correlation will be shown on the right of the traces. 
 
 6. Press 'g' to toggle label of cell1. Press 'h' to toggle label of cell2. **All key press functions are only functional when the GUI instead of GUI components are selected. This can be assured by clicking on the blank area of the GUI** Rejected ROI will become red in axe 2. Good/Bad statuses are shown for both cells. Click 'Save' to save. Good/Bad will be saved in ms.cell_label, 1 = keep, 0 = reject.
-7. Click ROIs in axe 2, the ROI is selected as cell 1. 
-7.  Other useful keypress functions:  
+7. ROIs in axes 2 are selectable. Click and the ROI is now cell 1 in axes 1. 
+8.  Other useful keypress functions:  
 - 'j' pop-out dialog jump to frame#  
 - 'i'/'o', move up (previous cell) of cell1/2
 - 'k'/'l', move down (next cell) of cell1/2
 - 'b'/'n', jump to max signal frame of cell1/2 (quickly switch between 'b' and 'n' is a good way to tell 2 neighboring cells apart)
 - 'leftarrow'/'rightarrow', previous/next 'step' frame.
 9. 'RasterVideo' button will generate a raster video. Hit 'Play' to quick play the video. Left/Right key will move current frame by step. 'Step' sets the step size of Left/Right keypressing as well as video play.
+10. Input a number greater than 1 in zoom-in text box to have a closer look at the selected ROI. Recommended value = 3. 
+
+**Useful Tips**
+Go through all neurons 1 by 1 is tedious, especially when you have several hundreds of ROIs, but it is recommended you go through all ROIs nonetheless. These tips can speed up this process significantly. 
+Good ROIs and bad ROIs from CNMFE are very easily distinguishable by their shapes. Jump to the peak dF frame and check how the ROI contour fits the cell (use low contour display threshold, e.g. 0.1). If the contour fits perfectly, it is usually a good one, no need for further check, jump to the next one. If the contour only fits part of the cell, there is likely another ROI for the rest part of this cell. Keep the better of the 2. If the ROI contour looks irregular, it is likely a bad one, check the neighboring ROIs.
+At the end of the cell rejection, switch the view of axes 2 to maxproj, toggle visibility of good/bad ROIs, use the MATLAB buit-in zoom in tool and pan tool to do a final quick check. 
 
 
  
