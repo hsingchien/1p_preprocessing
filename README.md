@@ -53,7 +53,7 @@ Keys:
 
 ## CellScreener
 <p><code>CellScreener;</code></p>
-This GUI provides a more versatile solution for cell screening. You can easily visualize and compare ROIs in the video.    
+This GUI provides a more versatile solution for cell screening. You can easily visualize and compare ROIs in the video.
 
 **Quick guide**  
 1. click 'load V(mat/avi)' button, select .avi or .mat file of GCaMP video. Loading will take some moments. In the current version, video file is loaded to memory for quick access.  
