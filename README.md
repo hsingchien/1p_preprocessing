@@ -57,7 +57,7 @@ This GUI provides a more versatile solution for cell screening. You can easily v
 
 **Quick guide**  
 1. click 'load V(mat/avi)' button, select .avi or .mat file of GCaMP video. Loading will take some moments. In the current version, video file is loaded to memory for quick access.  
-2. click load ms.mat, select ms.mat. If what you have are PCA/ICA outputs, use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to readable ms files. 
+2. click load ms.mat, select ms.mat. If what you have are PCA/ICA outputs, use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to readable ms files.   
 ***minimum requirement for ms.mat***  
 ms.SFPs ------ Footprints of all ROIs, **height x width x n_ROIs**  
 ms.RawTraces ------ Temporal traces of all ROIs, **n_time_points x n_ROIs**  
