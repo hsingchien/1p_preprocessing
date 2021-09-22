@@ -26,14 +26,14 @@ copy_to_googledrive = false;
 % analysis_time =strcat(date,'_', num2str(ct(4)),'-',num2str(ct(5)),'-',num2str(floor(ct(6))));
 analysis_time = 'processed';
 %% %% 1 - Create video object and save into matfile
-display('Step 1: Create video object');
+display('NormCorre-1: Create video object');
 ms = msGenerateVideoObj(pwd,'','avi');
 ms.analysis_time = analysis_time;
 ms.ds = spatial_downsampling;
 mkdir(strcat(pwd,separator,analysis_time));
 save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
 %% 2 - Perform motion correction using NormCorre
-display('Step 2: Motion correction');
+display('NormCorre-2: Motion correction');
 if exist('crop.csv')
     crop_coord = csvread('crop.csv',1,0);
     crop_coord = crop_coord(end-3:end);

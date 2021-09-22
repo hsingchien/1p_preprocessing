@@ -12,15 +12,16 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\PV_S5E2\XZ99_XZ91\2021_07_27\XZ99';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\CMK-CMK\XZ103_XZ101(m)\2021_09_20\XZ103';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\CMK-CMK\XZ103_XZ101(m)\2021_09_20\XZ101'
 };
 downsample_ratio = 1;
 isnonrigid = false;
-doNormCorre = false;
-doFFT = false; % set false if you want to skip FFT
+doNormCorre = true;
+doFFT = true; % set false if you want to skip FFT
 doCNMFE = true;
-CNMFE_on_raw = true; % set true if you want to run CNMFE on raw
-
+CNMFE_on_raw = false; % set true if you want to run CNMFE on raw
+par_size = 8; % parpool size (parallel computing worker), change to smaller number, e.g. 4 if having out-of-memory problem. 
 %% cnmfe parameters
 CNMFE_options = struct(...
 'Fs', 15,... % frame rate
@@ -38,33 +39,36 @@ CNMFE_options = struct(...
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
 'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 7,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
+'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 4); % cmk 19 gaba 10
+'min_pnr_res', 19); % cmk 19 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
-   if i > 1
-       doNormCorre = true;
-   end
-       
+
    tic;
    cd(RawInputDir{i});
    %% motion correction
    if doNormCorre
+       if isempty(gcp('nocreate'))
+        parpool('local',par_size);
+       end
        ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
        % this will generate a 'processed' folder containing the motion
        % corrected & downsampled video as 'msvideo_corrected.avi'
-       clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE CNMFE_options ms CNMFE_on_raw;
+       clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE CNMFE_options ms CNMFE_on_raw par_size;
    end
    cd('processed\');
    %% FFT video generation
    if and(~doFFT, ~CNMFE_on_raw)
+       disp('Skip FFT step...');
        vName = 'msvideo_dFF.avi'; % FFT already exist, skip FFT step, run CNMFE on FFT video
    elseif CNMFE_on_raw
+       disp('Skip FFT step, running CNMFE on raw video');
        vName = 'msvideo_corrected.avi'; % skip FFT, run CNMFE on motion corrected raw video
    else
+       disp('Generate FFT video...');
        vName = 'msvideo_dFF.avi';
        addpath 'C:\Program Files (x86)\Fiji.app\scripts'
        FFT = 1;
@@ -259,13 +263,21 @@ for i = 1:length(RawInputDir)
         print(fig, '-dpng', '-r300', [videoPath, '\dFFsummary.png']);
         %% Quit ImageJ
         ij.IJ.run("Quit","");
-        clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms CNMFE_on_raw;
+        clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms CNMFE_on_raw par_size;
         close all;
    end
     %% CNMFE on FFT output
     if doCNMFE & exist('ms')
+        disp('Running CNMFE...');
+        if isempty(gcp('nocreate'))
+            parpool('local', par_size);
+        end
         XZ_CNMFE_batch(pwd, vName, CNMFE_options, ms);
     elseif doCNMFE
+        disp('Running CNMFE...');
+        if isempty(gcp('nocreate'))
+            parpool('local', par_size);
+        end
         XZ_CNMFE_batch(pwd, vName, CNMFE_options);
     end
     toc;

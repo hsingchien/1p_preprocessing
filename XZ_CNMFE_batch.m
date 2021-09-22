@@ -157,8 +157,6 @@ if ispc
 else
     separator = '/'; % For unix (mac, linux) operating systems
 end
-
-display('Step 3: CNMFE');
 ms.CNMFE_opt = CNMFE_opt;
 ms = msRunCNMFE_large_batch(ms);
 msExtractSFPs(ms); % Extract spatial footprints for subsequent re-alignement

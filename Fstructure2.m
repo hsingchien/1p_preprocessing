@@ -6,22 +6,21 @@ F.MouseN = MouseN;
 FPS = 15;
 nVideo = 2;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ98'}; 
-date = cell(nVideo,1); date(:) = {'20210527'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ90'}; 
+date = cell(nVideo,1); date(:) = {'20210428'};
 session = {'sep';'exp'};
-time = {'14_41_05'; '14_52_14'};
+time = {'16_40_16'; '16_51_35'};
 % path for timestamps
-filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ98_XZ89(m)\2021_05_27\14_41_05_sep\Miniscope2_XZ98';...
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ98_XZ89(m)\2021_05_27\14_52_14_exp\Miniscope2_XZ98';...
-    
+filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ90_XZ89(m)\2021_04_28\16_40_16_sep\Miniscope3_XZ90';...
+    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ90_XZ89(m)\2021_04_28\16_51_35_exp\Miniscope3_XZ90';...
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_mDLX\XZ98_XZ89(m)\2021_05_27\XZ98';
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ90_XZ89(m)\2021_04_28\XZ90';
 fileName = {'msvideo_dFF.avi'; 'msvideo_dFF.avi'};
-F.ExperimentID = ['PairB13_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairC5_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -61,7 +60,8 @@ for i = 1:nVideo
            load([msPath,'\ms_exp.mat']);
        case 3
            load([msPath,'\ms_sep2.mat']);
-              end
+   end
+   [ms, newt] = InterpoDropped(ms,Ts{i}.Ms); % interpolate dropped frames
    if isfield(ms,'cell_label')
        ms.goodCellVec = ms.cell_label;
        ms = rmfield(ms,'cell_label');
@@ -69,7 +69,12 @@ for i = 1:nVideo
    if isfield(ms,'vidObj')
        ms = rmfield(ms, 'vidObj');
    end
+   
    MS{i} = ms;
+   Ts{i}.Ms = newt; % linear-interpolation timestamp
+   % also interpolate head orientation matrix
+   interp_qt = interp1(qt{i}.data(:,1), qt{i}.data(:,2:end), newt);
+   qt{i}.data = [newt,interp_qt];
    endFrame = [endFrame; size(ms.FiltTraces,1)];
 end
 F.MS = MS;
