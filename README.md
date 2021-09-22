@@ -18,13 +18,13 @@ This is the main script to batch process the videos. It does Motion Correction (
 **Crop**  
 Crop can be easily done automatically AFTER NormCorre (NormCorre is always run on the full video). You need to have a csv file containing X, Y, Width, Height value (in this exact order), saved as 'crop.csv' in the same folder of all the raw videos. The easiest way to do this is using ImageJ. Open ImageJ, go to Analyze -> Set Measurement... , check 'Bounding Rectangle'. Then use rectangle select tool to draw your crop region. Select Analyze -> Measure, make sure BX BY Width Height are the last 4 numbers shown in the table, then save the table as 'crop.csv' in the correct directory. 
 
-**Output**
+**Output**  
 After Batch_NormCorre_FFT_CNMFE, you will get a ms.mat, which contains all the outputs. In ms.mat,  
 RawTraces -- raw GCaMP video signal trace  
 FiltTraces -- traces from model-based deconvolution. Usually this is what you want to use for further analysis  
 SFPs -- ROI contours  
 
-**Parameters**  
+**Parameters**   
 Batch_NormCorre_FFT_CNMFE has 3 options: downsample ratio (default 2), non-rigid registration toggle (default false) and doFFT (default true).  
 If you are unsatisfied with the CNMFE output, major parameters can be set in msRunCNMFE_large_batch.m <p><code>edit msRunCNMFE_large_batch</code></p>
 These are the key parameters you want to focus:
