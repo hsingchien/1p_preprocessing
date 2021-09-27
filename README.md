@@ -13,14 +13,18 @@ This is the main script to batch process the videos. It does Motion Correction (
 4. Make sure JAVA is allowed to use maximum memory (change this in matlab preferences -> General -> JAVA Heap Memory)
 5. Make sure you cloned the entire repository and have run Initialize.m (or make sure the toolboxes and other necessaties are added to the path)
 6. Install toolboxes: Parallel computing toolbox, Deep learning toolbox, Statistics and machine learning toolbox, Deep learning toolbox converter for tensorflow models, Image processing toolbox, Signal processing toolbox.
-7. If you have 'out of memory' error, try using less cores in parallel computing settings  
+7. If you have 'out of memory' error, set par_size to a smaller number.
 
+**Crop**  
+Crop can be easily done automatically AFTER NormCorre (NormCorre is always run on the full video). You need to have a csv file containing X, Y, Width, Height value (in this exact order), saved as 'crop.csv' in the same folder of all the raw videos. The easiest way to do this is using ImageJ. Open ImageJ, go to Analyze -> Set Measurement... , check 'Bounding Rectangle'. Then use rectangle select tool to draw your crop region. Select Analyze -> Measure, make sure BX BY Width Height are the last 4 numbers shown in the table, then save the table as 'crop.csv' in the correct directory. 
+
+**Output**  
 After Batch_NormCorre_FFT_CNMFE, you will get a ms.mat, which contains all the outputs. In ms.mat,  
 RawTraces -- raw GCaMP video signal trace  
 FiltTraces -- traces from model-based deconvolution. Usually this is what you want to use for further analysis  
 SFPs -- ROI contours  
 
-**Parameters**  
+**Parameters**   
 Batch_NormCorre_FFT_CNMFE has 3 options: downsample ratio (default 2), non-rigid registration toggle (default false) and doFFT (default true).  
 If you are unsatisfied with the CNMFE output, major parameters can be set in msRunCNMFE_large_batch.m <p><code>edit msRunCNMFE_large_batch</code></p>
 These are the key parameters you want to focus:
@@ -32,7 +36,7 @@ These are the key parameters you want to focus:
 
 Once you are happy with the paramters, rerun CNMFE <p><code>XZ_CNMFE_batch(dirName, vName)</code></p> dirName is the folder path containing the video file you want to run CNMFE , vName is the filename of this video file (usually msvideo_FFT.avi or msvideo_corrected.avi). Follow the guide to finish CNMFE. Be sure to backup any outputs from previous CNMFE runs if you want, as this might overwrite old ms.mat. 
 
-# Cell Screening
+# Cell Screening ##
 Once you get ms.mat, you want to do screening. Label the good ones and bad ones.
 There are 2 tools you can use.
 ## FastScreener
@@ -43,16 +47,17 @@ In the pop-out window, select ms.mat. RawTraces of will be displayed. Good cells
 Keys: 
 - 'a' -- previous cell    
 - 'd' -- next cell    
-- 's' -- save, cell label is saved as 'c_label.mat' in the same directory as ms.mat you selected. Load this and ms.mat, set ms.cell_label to c_label and overwrite the original ms.mat    
-- 'j' -- toggle cell label    
+- 's' -- save, cell label is saved as 'c_label.mat' in the same directory as ms.mat you selected. You can then use command <code>CleanMS('ms.mat','c_label.mat');</code> to create a cleaned version of ms, saved as 'ms_cleaned.mat' in the same directory.   
+- 'j' -- toggle cell label 
+- 'r' -- toggle between Raw and Filt traces.   
 
 ## CellScreener
 <p><code>CellScreener;</code></p>
-This GUI provides a more versatile solution for cell screening. You can easily visualize and compare ROIs in the video.    
+This GUI provides a more versatile solution for cell screening. You can easily visualize and compare ROIs in the video.
 
 **Quick guide**  
 1. click 'load V(mat/avi)' button, select .avi or .mat file of GCaMP video. Loading will take some moments. In the current version, video file is loaded to memory for quick access.  
-2. click load ms.mat, select ms.mat. If what you have are PCA/ICA outputs, use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to readable ms files. 
+2. click load ms.mat, select ms.mat. If what you have are PCA/ICA outputs, use Convert_pcaSFPs_to_CNMFE_SFPs.m to batch convert the PCA/ICA footprints to readable ms files.   
 ***minimum requirement for ms.mat***  
 ms.SFPs ------ Footprints of all ROIs, **height x width x n_ROIs**  
 ms.RawTraces ------ Temporal traces of all ROIs, **n_time_points x n_ROIs**  
@@ -68,14 +73,25 @@ ms.ds ----- downsample ration. set this to 1 if no downsample is performed.
 5. Select a cell in list 1, click Sort_ROI, list 2 will be sorted by their distance to the cell in list 1. Footprint overlap and temporal correlation will be shown on the right of the traces. 
 
 6. Press 'g' to toggle label of cell1. Press 'h' to toggle label of cell2. **All key press functions are only functional when the GUI instead of GUI components are selected. This can be assured by clicking on the blank area of the GUI** Rejected ROI will become red in axe 2. Good/Bad statuses are shown for both cells. Click 'Save' to save. Good/Bad will be saved in ms.cell_label, 1 = keep, 0 = reject.
-7. Click ROIs in axe 2, the ROI is selected as cell 1. 
-7.  Other useful keypress functions:  
+7. ROIs in axes 2 are selectable. Click and the ROI is now cell 1 in axes 1. 
+8.  Other useful keypress functions:  
 - 'j' pop-out dialog jump to frame#  
 - 'i'/'o', move up (previous cell) of cell1/2
 - 'k'/'l', move down (next cell) of cell1/2
 - 'b'/'n', jump to max signal frame of cell1/2 (quickly switch between 'b' and 'n' is a good way to tell 2 neighboring cells apart)
 - 'leftarrow'/'rightarrow', previous/next 'step' frame.
 9. 'RasterVideo' button will generate a raster video. Hit 'Play' to quick play the video. Left/Right key will move current frame by step. 'Step' sets the step size of Left/Right keypressing as well as video play.
+10. Input a number greater than 1 in zoom-in text box to have a closer look at the selected ROI. Recommended value = 3. 
+
+**Useful Tips**
+Go through all neurons 1 by 1 is tedious, especially when you have several hundreds of ROIs, but it is recommended you go through all ROIs nonetheless. These tips can speed up this process significantly.  
+Good ROIs and bad ROIs from CNMFE are very easily distinguishable by their shapes. Jump to the peak dF frame and check how the ROI contour fits the cell (use low contour display threshold, e.g. 0.1). 
+* If the contour fits perfectly, it is usually a good one, no need for further check, jump to the next one. 
+* If the contour only fits part of the cell, there is likely another ROI for the rest part of this cell. Keep the better of the 2. 
+* If the ROI contour looks irregular, it is likely a bad one, check the neighboring ROIs.
+
+
+At the end of the cell rejection, switch axes 2 to maxproj, toggle visibility of good/bad ROIs, use the MATLAB buit-in zoom in tool and pan tool to do a final quick check. 
 
 
  
