@@ -1,4 +1,4 @@
-Fversion = '20210902';
+Fversion = '20211119';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -199,9 +199,9 @@ cor_values = containers.Map()
 for i =1:length(allPairs)
     this_cor = [];
     PairID = ['Pair',num2str(i)];
-    for k = 1:length(allPairs{i}{j}.MS)
-        filt1 = mean(zscore(allPairs{i}{1}.MS{k}.FiltTraces),2);
-        filt2 = mean(zscore(allPairs{i}{2}.MS{k}.FiltTraces),2);
+    for k = 1:length(allPairs{i}{1}.MS)
+        filt1 = mean(zscore(allPairs{i}{1}.MS{k}.FiltTraces(:,find(allPairs{i}{1}.MS{k}.goodCellVec))),2);
+        filt2 = mean(zscore(allPairs{i}{2}.MS{k}.FiltTraces(:,find(allPairs{i}{2}.MS{k}.goodCellVec))),2);
         M1toM2 = allPairs{i}{1}.TimeStamp.mapTs{k}.M1toM2;
         M2toM1 = allPairs{i}{1}.TimeStamp.mapTs{k}.M2toM1;
         if length(M1toM2) > length(M2toM1)

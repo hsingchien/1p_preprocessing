@@ -6,21 +6,24 @@ F.MouseN = MouseN;
 FPS = 15;
 nVideo = 2;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ90'}; 
-date = cell(nVideo,1); date(:) = {'20210428'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ111'}; 
+GenType = 'HET'; F.GenType = GenType;
+date = cell(nVideo,1); date(:) = {'20211013'};
 session = {'sep';'exp'};
-time = {'16_40_16'; '16_51_35'};
+time = {'16_11_00'; '16_24_01'};
 % path for timestamps
-filePath = {'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ90_XZ89(m)\2021_04_28\16_40_16_sep\Miniscope3_XZ90';...
-    'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ90_XZ89(m)\2021_04_28\16_51_35_exp\Miniscope3_XZ90';...
+filePath = {
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ111_XZ108(m)\2021_10_13\16_11_00_sep\Miniscope1_XZ111';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ111_XZ108(m)\2021_10_13\16_24_01_exp\Miniscope1_XZ111';
+%     'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\CMK-CMK\XZ116_XZ101(m)\2021_09_21\16_37_22_exp2\Miniscope2_XZ116';
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\XZ90_XZ89(m)\2021_04_28\XZ90';
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ111_XZ108(m)\2021_10_13\XZ111';
 fileName = {'msvideo_dFF.avi'; 'msvideo_dFF.avi'};
-F.ExperimentID = ['PairC5_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairDS11_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -59,8 +62,8 @@ for i = 1:nVideo
        case 2
            load([msPath,'\ms_exp.mat']);
        case 3
-           load([msPath,'\ms_sep2.mat']);
-   end
+           load([msPath,'\ms_exp2.mat']);
+   end 
    [ms, newt] = InterpoDropped(ms,Ts{i}.Ms); % interpolate dropped frames
    if isfield(ms,'cell_label')
        ms.goodCellVec = ms.cell_label;
@@ -87,6 +90,7 @@ fprintf('ms done\n');
 F.videoInfo = table(No,MouseID,date,session,...
     time, filePath, fileName,startFrame,...
 endFrame, totalFrame,duration);
+F.AnimalID = MouseID{1};
 fprintf('videoInfo constructed\n');
 %% align timestamps
 F.TimeStamp.Ts = Ts;

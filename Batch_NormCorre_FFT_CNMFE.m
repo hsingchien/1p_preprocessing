@@ -12,8 +12,8 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\CMK-CMK\XZ103_XZ101(m)\2021_09_20\XZ103';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\CMK-CMK\XZ103_XZ101(m)\2021_09_20\XZ101'
+
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ117_XZ108(m)\2021_11_24\XZ117';
 };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -21,7 +21,7 @@ doNormCorre = true;
 doFFT = true; % set false if you want to skip FFT
 doCNMFE = true;
 CNMFE_on_raw = false; % set true if you want to run CNMFE on raw
-par_size = 8; % parpool size (parallel computing worker), change to smaller number, e.g. 4 if having out-of-memory problem. 
+par_size = 6; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
 %% cnmfe parameters
 CNMFE_options = struct(...
 'Fs', 15,... % frame rate
@@ -39,14 +39,13 @@ CNMFE_options = struct(...
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
 'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 21,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
+'min_pnr', 10,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 19); % cmk 19 gaba 10
+'min_pnr_res', 8); % cmk 19 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
-
    tic;
    cd(RawInputDir{i});
    %% motion correction
