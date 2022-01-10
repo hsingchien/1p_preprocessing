@@ -1,29 +1,30 @@
 %% get ready
 clear all;
 F = struct();
-MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
+MouseN = 1; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
-nVideo = 2;
+nVideo = 4;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ111'}; 
-GenType = 'HET'; F.GenType = GenType;
-date = cell(nVideo,1); date(:) = {'20211013'};
-session = {'sep';'exp'};
-time = {'16_11_00'; '16_24_01'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ137'}; 
+% GenType = 'WT'; F.GenType = GenType;
+date = cell(nVideo,1); date(:) = {'20211221'};
+session = {'sep';'toy';'exp';'exp'};
+time = {'14_21_45'; '14_33_05';'14_44_04';'15_03_37'};
 % path for timestamps
 filePath = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ111_XZ108(m)\2021_10_13\16_11_00_sep\Miniscope1_XZ111';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ111_XZ108(m)\2021_10_13\16_24_01_exp\Miniscope1_XZ111';
-%     'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\CMK-CMK\XZ116_XZ101(m)\2021_09_21\16_37_22_exp2\Miniscope2_XZ116';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\14_21_45_sep\Miniscope2_XZ137';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\14_33_05_toy\Miniscope2_XZ137';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\14_44_04_exp1\Miniscope2_XZ137';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\15_03_37_exp2\Miniscope2_XZ137'
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ111_XZ108(m)\2021_10_13\XZ111';
-fileName = {'msvideo_dFF.avi'; 'msvideo_dFF.avi'};
-F.ExperimentID = ['PairDS11_',date{1},'_F']; % change Pair#
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\XZ137\processed';
+fileName = cell(nVideo,1); fileName(:) = {'msvideo_dFF.avi'};
+F.ExperimentID = ['PairDS_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -60,9 +61,11 @@ for i = 1:nVideo
        case 1
            load([msPath,'\ms_sep.mat']);
        case 2
-           load([msPath,'\ms_exp.mat']);
+           load([msPath,'\ms_toy.mat']);
        case 3
-           load([msPath,'\ms_exp2.mat']);
+           load([msPath,'\ms_exp1.mat']);
+       case 4
+           load([msPath,'\ms_exp2.mat'])
    end 
    [ms, newt] = InterpoDropped(ms,Ts{i}.Ms); % interpolate dropped frames
    if isfield(ms,'cell_label')
@@ -108,20 +111,67 @@ F.HeadOrientation.qt = qt;
 fprintf('head orientation constructed\n');
 %% Behavior
 Behavior = cell(1,nVideo);
-A={};
+Ac={};
 for i = 1:nVideo
     temppath = strsplit(filePath{i},'\');
     behavpath = [strjoin(temppath(1:end-1), '\'),'\BehavCam_0'];
     if exist([behavpath,'\behavior.txt'])
         [B,A] = BehavStruExtract([behavpath,'\behavior.txt'], MouseN);
         Behavior{i} = B;
+        Ac{i} = A;
         fprintf('behavior of session %d constructed!\n',i);
     else
         fprintf('behavior annotation not found, session %d left blank\n',i);
     end
 end
-F.Annotation.annBD = A;
+F.Annotation.annBD = Ac;
 F.Behavior = Behavior;
+%% add 'other' and reorder behavior field
+all_behav = {'attack','chasing','tussling','threaten','escape','defend',...
+    'flinch','general-sniffing','sniff_face','sniff_genital','approach',...
+    'follow','interaction', 'socialgrooming', 'mount','dig',...
+    'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'nesting','human_interfere', 'other'};
+
+        for k = 1:length(F.Behavior)
+            if ~isempty(F.Behavior{k})
+                % add 'other'
+                all_behav_vec = sum(vertcat(F.Behavior{k}.LogicalVecs{:}),1);
+                other_logic = (all_behav_vec == 0);
+                % find onset & offset (from 1)
+                start = find(diff(other_logic)==1);
+                eend = find(diff(other_logic)==-1)-1;
+                if length(start) < length(eend)                    
+                    start=[0,start];
+                    fprintf('%d, %d, other start\n', i, j);
+                elseif length(start) > length(eend);
+                    eend=[eend,length(other_logic)-1];
+                    fprintf('%d, %d, other end\n',i,j);
+                end
+                F.Behavior{k}.EventNames = [F.Behavior{k}.EventNames,'other'];
+                F.Behavior{k}.OnsetTimes = [F.Behavior{k}.OnsetTimes,start];
+                F.Behavior{k}.OffsetTimes = [F.Behavior{k}.OffsetTimes,eend];
+                F.Behavior{k}.LogicalVecs = [F.Behavior{k}.LogicalVecs,other_logic];
+                
+                if ~ismember('tussling', allPairs{i}{j}.Behavior{k}.EventNames)
+                    F.Behavior{k}.EventNames = [F.Behavior{k}.EventNames,'tussling'];
+                    F.Behavior{k}.OnsetTimes = [F.Behavior{k}.OnsetTimes,{[]}];
+                    F.Behavior{k}.OffsetTimes = [F.Behavior{k}.OffsetTimes,{[]}];
+                    F.Behavior{k}.LogicalVecs = [F.Behavior{k}.LogicalVecs, 0*F.Behavior{k}.LogicalVecs{1}];
+                end
+                if ismember('running', F.Behavior{k}.EventNames)
+                    [~,i2] = ismember('running', F.Behavior{k}.EventNames);
+                    F.Behavior{k}.EventNames{i2} = 'flinch';
+                    fprintf('Pair %d has running instead of flinch\n', i);
+                end
+                
+                % reorder
+                [i1,i2] = ismember(all_behav, F.Behavior{k}.EventNames);
+                F.Behavior{k}.EventNames = F.Behavior{k}.EventNames(i2);
+                F.Behavior{k}.LogicalVecs = F.Behavior{k}.LogicalVecs(i2);
+                F.Behavior{k}.OnsetTimes = F.Behavior{k}.OnsetTimes(i2);
+                F.Behavior{k}.OffsetTimes = F.Behavior{k}.OffsetTimes(i2);
+            end   
+        end
 %% Event
 F.Event.VideoEnd = endFrame;
 F.Event.VideoStart = startFrame;

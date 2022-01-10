@@ -1,4 +1,4 @@
-Fversion = '20211119';
+Fversion = '20211230';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -125,8 +125,8 @@ for i = 1:length(allPairs)
                 allPairs{i}{j}.Behavior{k}.EventNames = allPairs{i}{j}.Behavior{k}.EventNames(i2);
                 allPairs{i}{j}.Behavior{k}.LogicalVecs = allPairs{i}{j}.Behavior{k}.LogicalVecs(i2);
                 allPairs{i}{j}.Behavior{k}.OnsetTimes = allPairs{i}{j}.Behavior{k}.OnsetTimes(i2);
-                allPairs{i}{j}.Behavior{k}.OffTimes = allPairs{i}{j}.Behavior{k}.OffsetTimes(i2);
-            end   
+                allPairs{i}{j}.Behavior{k}.OffsetTimes = allPairs{i}{j}.Behavior{k}.OffsetTimes(i2);
+            end
          end
     end
 end
