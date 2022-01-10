@@ -13,7 +13,12 @@
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
 
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ117_XZ108(m)\2021_11_24\XZ117';
+%'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ137_XZ136(m)\XZ137';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ137_XZ136(m)\2021_12_09\XZ136';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ121_XZ119(m)\2021_12_21\XZ119';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ121_XZ119(m)\2021_12_21\XZ121'
+
+
 };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -42,11 +47,13 @@ CNMFE_options = struct(...
 'min_pnr', 10,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 8); % cmk 19 gaba 10
+'min_pnr_res', 8); % cmk 17 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
    tic;
+
+   
    cd(RawInputDir{i});
    %% motion correction
    if doNormCorre
