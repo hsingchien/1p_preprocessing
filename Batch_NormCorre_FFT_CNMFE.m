@@ -12,11 +12,14 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.
 RawInputDir = {
-
-%'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ137_XZ136(m)\XZ137';
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ137_XZ136(m)\2021_12_09\XZ136';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ121_XZ119(m)\2021_12_21\XZ119';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ121_XZ119(m)\2021_12_21\XZ121'
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ143_XZ138(m)\2022_01_14\XZ138';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ143_XZ138(m)\2022_01_14\XZ143';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ144_XZ139(m)\2022_01_14\XZ139';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ144_XZ139(m)\2022_01_14\XZ144';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ137(m)\2022_01_14\XZ145';
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ137(m)\2022_01_14\XZ137';
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\XZ136';
+'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\XZ145';
 
 
 };

@@ -1,4 +1,4 @@
-Fversion = '20211230';
+Fversion = '20220128';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -36,22 +36,32 @@ for i = 1:length(allPairs)
     allPairs{i}{1} = M1;
     allPairs{i}{2} = M2;
 end
-
-% disply flatline cells
+%%
+% disply flatline good cells and set them to bad
 for i = 1:length(allPairs)
     for j = 1:2
+        flatline_cell_id = [];
         for m = 1:length(allPairs{i}{j}.MS)
             c_ms = allPairs{i}{j}.MS{m};
             filtT = c_ms.FiltTraces;
             cid = find(sum(filtT,1)==0);
             if ~isempty(cid)
-               disp(m);
-               disp(cid); 
+               fprintf('pair %d, animal %d, session %d\n',i,j,m);
+               fprintf('cell %d\n',cid);
+               flatline_cell_id = [flatline_cell_id, cid];
                 
             end
         end
+        for m = 1:length(allPairs{i}{j}.MS)
+            allPairs{i}{j}.MS{m}.goodCellVec(flatline_cell_id) = 0;
+            allPairs{i}{j}.MS{m}.goodCellVec = logical(allPairs{i}{j}.MS{m}.goodCellVec);
+        end
     end
 end
+
+
+
+%%
 
 for i = 1:length(allPairs)
     for j = 1:2
@@ -81,14 +91,22 @@ for i = 1:length(allPairs)
     end
 end
 %% add 'other' and reorder behavior field
-all_behav = {'attack','chasing','tussling','threaten','escape','defend',...
+all_behav_exp = {'attack','chasing','tussling','threaten','escape','defend',...
     'flinch','general-sniffing','sniff_face','sniff_genital','approach',...
     'follow','interaction', 'socialgrooming', 'mount','dig',...
     'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'nesting','human_interfere', 'other'};
+all_behav_toy = {'attack', 'threaten', 'escape', 'flinch', 'defend', 'follow', 'attention', 'approach', 'general-sniffing',... 
+    'mount', 'dig', 'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', ...
+    'human_interfere', 'other'}; 
 
 for i = 1:length(allPairs)
     for j = 1:2
         for k = 1:length(allPairs{i}{j}.Behavior)
+            if contains(allPairs{i}{j}.videoInfo.session{k},'toy')
+                all_behav = all_behav_toy;
+            else
+                all_behav = all_behav_exp;
+            end
             if ~isempty(allPairs{i}{j}.Behavior{k})
                 % add 'other'
                 all_behav_vec = sum(vertcat(allPairs{i}{j}.Behavior{k}.LogicalVecs{:}),1);
@@ -108,11 +126,12 @@ for i = 1:length(allPairs)
                 allPairs{i}{j}.Behavior{k}.OffsetTimes = [allPairs{i}{j}.Behavior{k}.OffsetTimes,eend];
                 allPairs{i}{j}.Behavior{k}.LogicalVecs = [allPairs{i}{j}.Behavior{k}.LogicalVecs,other_logic];
                 
-                if ~ismember('tussling', allPairs{i}{j}.Behavior{k}.EventNames)
+                if ~ismember('tussling', allPairs{i}{j}.Behavior{k}.EventNames) && contains(allPairs{i}{j}.videoInfo.session{k},'exp')
                     allPairs{i}{j}.Behavior{k}.EventNames = [allPairs{i}{j}.Behavior{k}.EventNames,'tussling'];
                     allPairs{i}{j}.Behavior{k}.OnsetTimes = [allPairs{i}{j}.Behavior{k}.OnsetTimes,{[]}];
                     allPairs{i}{j}.Behavior{k}.OffsetTimes = [allPairs{i}{j}.Behavior{k}.OffsetTimes,{[]}];
                     allPairs{i}{j}.Behavior{k}.LogicalVecs = [allPairs{i}{j}.Behavior{k}.LogicalVecs, 0*allPairs{i}{j}.Behavior{k}.LogicalVecs{1}];
+                    fprintf('Pair %d added tussling.\n', i)
                 end
                 if ismember('running', allPairs{i}{j}.Behavior{k}.EventNames)
                     [~,i2] = ismember('running', allPairs{i}{j}.Behavior{k}.EventNames);
@@ -178,6 +197,12 @@ end
 for i = 1:length(allPairs)
     for j = 1:2
         fprintf('pair %d, animal %d, id %s cell %d\n', i, j, allPairs{i}{j}.AnimalID, sum(allPairs{i}{j}.MS{1}.goodCellVec));
+    end
+end
+%% display genotypes
+for i = 1:length(allPairs)
+    for j = 1:2
+        fprintf('pair %d, animal %d, id %s genotype %s\n', i, j, allPairs{i}{j}.AnimalID, allPairs{i}{j}.GenType);
     end
 end
 

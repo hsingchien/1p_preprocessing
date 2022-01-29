@@ -1,30 +1,30 @@
 %% get ready
 clear all;
 F = struct();
-MouseN = 1; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
+MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
-nVideo = 4;
+nVideo = 3;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ137'}; 
-% GenType = 'WT'; F.GenType = GenType;
-date = cell(nVideo,1); date(:) = {'20211221'};
-session = {'sep';'toy';'exp';'exp'};
-time = {'14_21_45'; '14_33_05';'14_44_04';'15_03_37'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ145'}; 
+% GenType = 'HET'; F.GenType = GenType;
+date = cell(nVideo,1); date(:) = {'20220113'};
+session = {'sep';'toy';'exp'};
+time = {'15_55_38'; '16_08_27';'16_20_13'};
 % path for timestamps
 filePath = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\14_21_45_sep\Miniscope2_XZ137';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\14_33_05_toy\Miniscope2_XZ137';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\14_44_04_exp1\Miniscope2_XZ137';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\15_03_37_exp2\Miniscope2_XZ137'
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\15_55_38_sep\Miniscope2_XZ145';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\16_08_27_toy\Miniscope2_XZ145';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\16_20_13_exp\Miniscope2_XZ145';
+%     'F:\Miniscope Data Backup\Shank3_DualNewCage_processed\DLX-DLX\XZ137_XZ108(m)\2021_12_02\17_53_30_exp2\Miniscope1_XZ137';
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ141_XZ137(m)\2021_12_21\XZ137\processed';
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\XZ145\processed';
 fileName = cell(nVideo,1); fileName(:) = {'msvideo_dFF.avi'};
-F.ExperimentID = ['PairDS_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairD24_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -63,7 +63,7 @@ for i = 1:nVideo
        case 2
            load([msPath,'\ms_toy.mat']);
        case 3
-           load([msPath,'\ms_exp1.mat']);
+           load([msPath,'\ms_exp.mat']);
        case 4
            load([msPath,'\ms_exp2.mat'])
    end 
@@ -119,6 +119,16 @@ for i = 1:nVideo
         [B,A] = BehavStruExtract([behavpath,'\behavior.txt'], MouseN);
         Behavior{i} = B;
         Ac{i} = A;
+        if contains(F.videoInfo.session{i},'toy')
+            try 
+                [B,A] = BehavStruExtract([behavpath,'\behavior.txt'], MouseN+2);
+                Behavior{i}.Human = B;
+                fprintf('session %d human behavior stream added for mouse %d\n', i, MouseN);
+            catch ME
+            end
+        end
+            
+                
         fprintf('behavior of session %d constructed!\n',i);
     else
         fprintf('behavior annotation not found, session %d left blank\n',i);
@@ -127,12 +137,20 @@ end
 F.Annotation.annBD = Ac;
 F.Behavior = Behavior;
 %% add 'other' and reorder behavior field
-all_behav = {'attack','chasing','tussling','threaten','escape','defend',...
+all_behav_exp = {'attack','chasing','tussling','threaten','escape','defend',...
     'flinch','general-sniffing','sniff_face','sniff_genital','approach',...
     'follow','interaction', 'socialgrooming', 'mount','dig',...
     'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'nesting','human_interfere', 'other'};
+all_behav_toy = {'attack', 'threaten', 'escape', 'flinch', 'defend', 'follow', 'attention', 'approach', 'general-sniffing',... 
+    'mount', 'dig', 'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', ...
+    'human_interfere', 'other'};
 
         for k = 1:length(F.Behavior)
+            if contains(F.videoInfo.session{k},'toy')
+                all_behav = all_behav_toy;
+            else
+                all_behav = all_behav_exp;
+            end
             if ~isempty(F.Behavior{k})
                 % add 'other'
                 all_behav_vec = sum(vertcat(F.Behavior{k}.LogicalVecs{:}),1);
@@ -152,7 +170,7 @@ all_behav = {'attack','chasing','tussling','threaten','escape','defend',...
                 F.Behavior{k}.OffsetTimes = [F.Behavior{k}.OffsetTimes,eend];
                 F.Behavior{k}.LogicalVecs = [F.Behavior{k}.LogicalVecs,other_logic];
                 
-                if ~ismember('tussling', allPairs{i}{j}.Behavior{k}.EventNames)
+                if ~ismember('tussling', F.Behavior{k}.EventNames) && contains(F.videoInfo.session{k},'exp')
                     F.Behavior{k}.EventNames = [F.Behavior{k}.EventNames,'tussling'];
                     F.Behavior{k}.OnsetTimes = [F.Behavior{k}.OnsetTimes,{[]}];
                     F.Behavior{k}.OffsetTimes = [F.Behavior{k}.OffsetTimes,{[]}];
