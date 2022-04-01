@@ -4,27 +4,25 @@ F = struct();
 MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
-nVideo = 3;
+nVideo = 2;
 No = transpose(1:nVideo);
 MouseID = cell(nVideo,1); MouseID(:) = {'XZ145'}; 
 % GenType = 'HET'; F.GenType = GenType;
-date = cell(nVideo,1); date(:) = {'20220113'};
-session = {'sep';'toy';'exp'};
-time = {'15_55_38'; '16_08_27';'16_20_13'};
+date = cell(nVideo,1); date(:) = {'20220314'};
+session = {'sep';'exp'};
+time = {'13_51_19'; '14_45_55'};
 % path for timestamps
 filePath = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\15_55_38_sep\Miniscope2_XZ145';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\16_08_27_toy\Miniscope2_XZ145';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\16_20_13_exp\Miniscope2_XZ145';
-%     'F:\Miniscope Data Backup\Shank3_DualNewCage_processed\DLX-DLX\XZ137_XZ108(m)\2021_12_02\17_53_30_exp2\Miniscope1_XZ137';
+    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ136_XZ145\2022_03_14\XZ145_individual\13_51_19\Miniscope2';
+    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ136_XZ145\2022_03_14\XZ145_XZ136(m)\14_45_55\Miniscope2_XZ145';
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\XZ145\processed';
+msPath = 'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ136_XZ145\2022_03_14\XZ145';
 fileName = cell(nVideo,1); fileName(:) = {'msvideo_dFF.avi'};
-F.ExperimentID = ['PairD24_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairQD9_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -61,11 +59,17 @@ for i = 1:nVideo
        case 1
            load([msPath,'\ms_sep.mat']);
        case 2
-           load([msPath,'\ms_toy.mat']);
+           load([msPath,'\ms_exp.mat']);
        case 3
            load([msPath,'\ms_exp.mat']);
        case 4
-           load([msPath,'\ms_exp2.mat'])
+           load([msPath,'\ms_exp1.mat']);
+       case 5
+           load([msPath,'\ms_exp2.mat']);
+       case 6
+           load([msPath,'\ms_exp5.mat']);
+       case 7
+           load([msPath,'\ms_exp6.mat']);
    end 
    [ms, newt] = InterpoDropped(ms,Ts{i}.Ms); % interpolate dropped frames
    if isfield(ms,'cell_label')

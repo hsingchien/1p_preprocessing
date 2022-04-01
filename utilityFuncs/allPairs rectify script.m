@@ -1,4 +1,4 @@
-Fversion = '20220128';
+Fversion = '20220328';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -37,7 +37,7 @@ for i = 1:length(allPairs)
     allPairs{i}{2} = M2;
 end
 %%
-% disply flatline good cells and set them to bad
+% display flatline good cells and set them to bad
 for i = 1:length(allPairs)
     for j = 1:2
         flatline_cell_id = [];
@@ -108,6 +108,7 @@ for i = 1:length(allPairs)
                 all_behav = all_behav_exp;
             end
             if ~isempty(allPairs{i}{j}.Behavior{k})
+               
                 % add 'other'
                 all_behav_vec = sum(vertcat(allPairs{i}{j}.Behavior{k}.LogicalVecs{:}),1);
                 other_logic = (all_behav_vec == 0);
@@ -145,10 +146,19 @@ for i = 1:length(allPairs)
                 allPairs{i}{j}.Behavior{k}.LogicalVecs = allPairs{i}{j}.Behavior{k}.LogicalVecs(i2);
                 allPairs{i}{j}.Behavior{k}.OnsetTimes = allPairs{i}{j}.Behavior{k}.OnsetTimes(i2);
                 allPairs{i}{j}.Behavior{k}.OffsetTimes = allPairs{i}{j}.Behavior{k}.OffsetTimes(i2);
+                for tt = 1:length(allPairs{i}{j}.Behavior{k}.OnsetTimes)
+                    if length(allPairs{i}{j}.Behavior{k}.OnsetTimes{tt}) ~= length(allPairs{i}{j}.Behavior{k}.OffsetTimes{tt})
+                       fprintf('Pair %d, animal %d, Session %d, Behavior %d\n', i,j,k,tt); 
+                    end    
+                end
             end
          end
     end
 end
+%% find inconsistency of behavior
+
+
+
 
 %% timestamp interpolation, adjust timestamps accordingly.
 for i = 1:length(allPairs)
@@ -234,11 +244,15 @@ for i =1:length(allPairs)
         else
            filt1 = filt1(M1toM2); 
         end
+        if ~and(length(filt1) > 2000, length(filt2) > 2000)
+            continue;
+        end
         minilen = min([length(filt1), length(filt2)]);
-        cor_value = corr(filt1(1:minilen), filt2(1:minilen));
+        cor_value = corr(filt1(901:minilen), filt2(901:minilen));
         this_cor = [this_cor, cor_value];
         fprintf(['Pair %d ', allPairs{i}{1}.videoInfo.session{k}, ' correlation is %4.4f\n'], i, cor_value);
-        
+        figure, plot(filt1(1:minilen),'r-'); hold on; plot(filt2(1:minilen),'b-');
+        title(['Pair ',num2str(i),'-', allPairs{i}{1}.videoInfo.session{k}]);
     end
     cor_values(PairID) = this_cor;
 end
@@ -251,10 +265,7 @@ for i = 1:length(allPairs)
             if length(allPairs{i}{1}.TimeStamp.mapTs{k}.M2toM1) ~= size(allPairs{i}{1}.MS{k}.FiltTraces,1)
                 fprintf('Pair %d, session %d, M2toM1\n',i,k);
             end
-            
-        
         end
-end
-            
+end            
             
 

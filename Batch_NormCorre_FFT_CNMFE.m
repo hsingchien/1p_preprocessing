@@ -10,26 +10,21 @@
 %% Set paths to your raw videos and options for normcorre and fft
 % IMPORTANT: Before you run, make sure the videos are visually consistent. 
 % Bad frames caused by miniscope failure should be removed before starting 
-% this script, otherwise CNMFE will throw errors.
+% this script, otherwise CNMFE will throw errors.   
 RawInputDir = {
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ143_XZ138(m)\2022_01_14\XZ138';
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ143_XZ138(m)\2022_01_14\XZ143';
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ144_XZ139(m)\2022_01_14\XZ139';
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Male\XZ144_XZ139(m)\2022_01_14\XZ144';
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ137(m)\2022_01_14\XZ145';
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ137(m)\2022_01_14\XZ137';
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\XZ136';
-'E:\MiniscopeData(processed)\NewCage_free_dual\mDLX_vs_mDLX\Male\XZ145_XZ136(m)\2022_01_13\XZ145';
-
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Bottom';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Top';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Right';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Left';
 
 };
 downsample_ratio = 1;
 isnonrigid = false;
-doNormCorre = true;
-doFFT = true; % set false if you want to skip FFT
+doNormCorre = false;
+doFFT = false; % set false if you want to skip FFT
 doCNMFE = true;
 CNMFE_on_raw = false; % set true if you want to run CNMFE on raw
-par_size = 6; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
+par_size = 4; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
 %% cnmfe parameters
 CNMFE_options = struct(...
 'Fs', 15,... % frame rate
@@ -47,16 +42,18 @@ CNMFE_options = struct(...
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
 'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 10,... % minimum peak-to-noise ratio for a seeding pixel, cmk 21, gaba 12
+'min_pnr', 10,... % minimum peak-to-noise ratio for a seeding pixel, cmk 18, gaba 12
 ...% residual
 'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 8); % cmk 17 gaba 10
+'min_pnr_res', 8); % cmk 16 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
    tic;
-
-   
+   if i > 1
+       doNormCorre = true;
+       doFFT = true;
+   end
    cd(RawInputDir{i});
    %% motion correction
    if doNormCorre
@@ -290,5 +287,5 @@ for i = 1:length(RawInputDir)
         XZ_CNMFE_batch(pwd, vName, CNMFE_options);
     end
     toc;
-%     FFTTraces('msvideo_dFF.avi', 'ms.mat',0.8,true);
+%     FFTTraces('msvideo_dFF.avi', 'ms.mat',0.8,true);8
 end

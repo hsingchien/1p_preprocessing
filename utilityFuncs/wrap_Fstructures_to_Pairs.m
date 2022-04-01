@@ -1,4 +1,4 @@
-allFs = dir('*.mat');
+allFs = dir('Pair*.mat');
 allFs = {allFs.name};
 % sort all Fs
 n = [];

@@ -7,8 +7,8 @@ fend =7343;
 rTraces(fstart:fend,:) = (rTraces(fend+1,:) - rTraces(fstart-1,:)) /(fend-fstart+1) .* transpose(1:(fend-fstart+1)) + rTraces(fstart-1,:);
 fTraces(fstart:fend,:) = (fTraces(fend+1,:) - fTraces(fstart-1,:)) /(fend-fstart+1) .* transpose(1:(fend-fstart+1)) + fTraces(fstart-1,:);
 %%
-startF = 39;
-endF = 80;
+startF = 11431;
+endF = 11433;
 
 increment = (double(vidmat(:,:,endF+1)) - double(vidmat(:,:,startF-1)))/(endF-startF+2);
 f = figure;
@@ -21,7 +21,7 @@ for i = startF:endF
     
 end
 %%
-vidw = VideoWriter('19_interpolate.avi','Grayscale AVI');
+vidw = VideoWriter('msvideo_dFF_interpolated.avi','Grayscale AVI');
 vidw.FrameRate = 15;
 open(vidw);
 writeVideo(vidw,vidmat);
