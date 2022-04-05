@@ -1,4 +1,5 @@
-Fversion = '20220328';
+%% Rectify allPair F structures
+Fversion = '20220405';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -251,7 +252,7 @@ for i =1:length(allPairs)
         cor_value = corr(filt1(901:minilen), filt2(901:minilen));
         this_cor = [this_cor, cor_value];
         fprintf(['Pair %d ', allPairs{i}{1}.videoInfo.session{k}, ' correlation is %4.4f\n'], i, cor_value);
-        figure, plot(filt1(1:minilen),'r-'); hold on; plot(filt2(1:minilen),'b-');
+        figure, plot(filt1(901:minilen),'r-'); hold on; plot(filt2(901:minilen),'b-');
         title(['Pair ',num2str(i),'-', allPairs{i}{1}.videoInfo.session{k}]);
     end
     cor_values(PairID) = this_cor;
