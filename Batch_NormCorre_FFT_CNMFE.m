@@ -12,11 +12,11 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.   
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Bottom';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Top';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Right';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ152_XZ146(m)\2022_03_09\XZ152\Left';
-
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ150(m)\2022_04_05\XZ150';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ119_XZ112(m)\XZ119';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ119_XZ112(m)\XZ112';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ151(m)\2022_03_31\XZ155';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ151(m)\2022_03_31\XZ151';
 };
 downsample_ratio = 1;
 isnonrigid = false;
@@ -24,7 +24,7 @@ doNormCorre = false;
 doFFT = false; % set false if you want to skip FFT
 doCNMFE = true;
 CNMFE_on_raw = false; % set true if you want to run CNMFE on raw
-par_size = 4; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
+par_size = 6; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
 %% cnmfe parameters
 CNMFE_options = struct(...
 'Fs', 15,... % frame rate
@@ -50,17 +50,19 @@ CNMFE_options = struct(...
 %% Start batch
 for i = 1:length(RawInputDir)
    tic;
-   if i > 1
+   if i>1
        doNormCorre = true;
        doFFT = true;
    end
+
    cd(RawInputDir{i});
    %% motion correction
    if doNormCorre
        if isempty(gcp('nocreate'))
         parpool('local',par_size);
        end
-       ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid); 
+       ms = XZ_NormCorre_Batch(downsample_ratio,isnonrigid);
+       ms = rmfield(ms,'vidObj');
        % this will generate a 'processed' folder containing the motion
        % corrected & downsampled video as 'msvideo_corrected.avi'
        clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE CNMFE_options ms CNMFE_on_raw par_size;
@@ -273,7 +275,7 @@ for i = 1:length(RawInputDir)
         close all;
    end
     %% CNMFE on FFT output
-    if doCNMFE & exist('ms')
+    if doCNMFE & exist('ms','var')
         disp('Running CNMFE...');
         if isempty(gcp('nocreate'))
             parpool('local', par_size);

@@ -1,5 +1,5 @@
 %% Rectify allPair F structures
-Fversion = '20220405';
+Fversion = '20220413';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -231,7 +231,7 @@ for i = 1:length(allPairs)
     end
 end
 %% recalculate pcc and save it in a map container
-cor_values = containers.Map()
+cor_values = containers.Map();
 for i =1:length(allPairs)
     this_cor = [];
     PairID = ['Pair',num2str(i)];
@@ -249,10 +249,10 @@ for i =1:length(allPairs)
             continue;
         end
         minilen = min([length(filt1), length(filt2)]);
-        cor_value = corr(filt1(901:minilen), filt2(901:minilen));
+        cor_value = corr(filt1(1080:minilen), filt2(1080:minilen));
         this_cor = [this_cor, cor_value];
         fprintf(['Pair %d ', allPairs{i}{1}.videoInfo.session{k}, ' correlation is %4.4f\n'], i, cor_value);
-        figure, plot(filt1(901:minilen),'r-'); hold on; plot(filt2(901:minilen),'b-');
+        figure, plot(filt1(1:minilen),'r-'); hold on; plot(filt2(1:minilen),'b-');
         title(['Pair ',num2str(i),'-', allPairs{i}{1}.videoInfo.session{k}]);
     end
     cor_values(PairID) = this_cor;

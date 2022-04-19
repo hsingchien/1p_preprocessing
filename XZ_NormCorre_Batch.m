@@ -41,6 +41,6 @@ else
     crop_coord = [];
 end
 ms = msNormCorre(ms,isnonrigid,crop_coord);
-save('ms_after_registration.mat','ms','-v7.3');
+% save('ms_after_registration.mat','ms','-v7.3');
 end
 

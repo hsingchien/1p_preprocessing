@@ -1,11 +1,13 @@
 %%
 rTraces = ms.RawTraces;
 fTraces = ms.FiltTraces;
+sTraces = ms.S;
 % 7332 - 7338
-fstart = 7331;
-fend =7343;
+fstart = 26725;
+fend =26740;
 rTraces(fstart:fend,:) = (rTraces(fend+1,:) - rTraces(fstart-1,:)) /(fend-fstart+1) .* transpose(1:(fend-fstart+1)) + rTraces(fstart-1,:);
 fTraces(fstart:fend,:) = (fTraces(fend+1,:) - fTraces(fstart-1,:)) /(fend-fstart+1) .* transpose(1:(fend-fstart+1)) + fTraces(fstart-1,:);
+sTraces(:,fstart:fend) = (sTraces(:,fend+1) - sTraces(:,fstart-1)) /(fend-fstart+1) .* (1:(fend-fstart+1) + sTraces(:,fstart-1));
 %%
 startF = 11431;
 endF = 11433;
