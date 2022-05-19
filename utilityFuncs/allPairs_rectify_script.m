@@ -1,5 +1,5 @@
 %% Rectify allPair F structures
-Fversion = '20220413';
+Fversion = '20220516';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -259,7 +259,7 @@ for i =1:length(allPairs)
 end
 %% find timestamp mapping with different length than the timestamp of the ms
 for i = 1:length(allPairs)
-        for k = 1:length(allPairs{i}{j}.MS)
+        for k = 1:length(allPairs{i}{1}.MS)
             if length(allPairs{i}{1}.TimeStamp.mapTs{k}.M1toM2) ~= size(allPairs{i}{2}.MS{k}.FiltTraces,1)
                 fprintf('Pair %d, session %d, M1toM2\n',i,k);
             end
@@ -267,6 +267,19 @@ for i = 1:length(allPairs)
                 fprintf('Pair %d, session %d, M2toM1\n',i,k);
             end
         end
-end            
+end         
+%% find behavior timestamp frame dropping (should be none)
+for i = 1:length(allPairs)
+        for k = 1:length(allPairs{i}{1}.MS)
+            btstamp = allPairs{i}{1}.TimeStamp.Ts{k}.Bv;
+            dif_tstamp = diff(btstamp);
+            avg_ft = mean([quantile(dif_tstamp,0.25), quantile(dif_tstamp,0.75)]);
+            frame_drop_at = find(floor(dif_tstamp/avg_ft)>1);
+            if ~isempty(frame_drop_at)
+                fprintf('Pair %d session %d Behav Frame %d dropped\n', i, k, length(frame_drop_at));
+            end
+        end
+end
+
             
 

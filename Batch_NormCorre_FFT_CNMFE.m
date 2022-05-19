@@ -12,16 +12,13 @@
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.   
 RawInputDir = {
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ150(m)\2022_04_05\XZ150';
-% 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ119_XZ112(m)\XZ119';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ119_XZ112(m)\XZ112';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ151(m)\2022_03_31\XZ155';
-'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ151(m)\2022_03_31\XZ151';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ151(m)\2022_03_31\XZ155\right';
+'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ155_XZ151(m)\2022_03_31\XZ155\center';
 };
 downsample_ratio = 1;
 isnonrigid = false;
-doNormCorre = false;
-doFFT = false; % set false if you want to skip FFT
+doNormCorre = true;
+doFFT = true; % set false if you want to skip FFT
 doCNMFE = true;
 CNMFE_on_raw = false; % set true if you want to run CNMFE on raw
 par_size = 6; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
@@ -50,10 +47,7 @@ CNMFE_options = struct(...
 %% Start batch
 for i = 1:length(RawInputDir)
    tic;
-   if i>1
-       doNormCorre = true;
-       doFFT = true;
-   end
+   
 
    cd(RawInputDir{i});
    %% motion correction
