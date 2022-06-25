@@ -1,33 +1,32 @@
 %% get ready
 clear all;
 F = struct();
-MouseN = 1; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
+MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
-nVideo = 7;
+nVideo = 5;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'XZ93'}; 
-% GenType = 'KO'; F.GenType = GenType;
-date = cell(nVideo,1); date(:) = {'20211009'};
-session = {'sep';'exp';'exp';'exp';'exp';'exp';'exp'};
-time = {'17_27_34';'17_43_52';'17_45_02';'17_52_02';'17_55_22';'17_59_23';'18_06_38'};
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ158'}; 
+GenType = 'KO'; F.GenType = GenType;
+date = cell(nVideo,1); date(:) = {'20220613'};
+session = {'sep';'toy';'exp1-1';'exp1-2';'exp'};
+time = {'13_54_46';'14_05_34';'14_16_36';'14_16_36';'14_37_01'};
 % path for timestamps
 filePath = {
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ93_individual\17_27_34\Miniscope1';
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ97_XZ93(m)\17_43_52_exp1\Miniscope1_XZ93';
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ97_XZ93(m)\17_45_02_exp2\Miniscope1_XZ93';
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ97_XZ93(m)\17_52_02_exp3\Miniscope1_XZ93';
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ97_XZ93(m)\17_55_22_exp4\Miniscope1_XZ93';
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ97_XZ93(m)\17_59_23_exp5\Miniscope1_XZ93';
-    'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ97_XZ93(m)\18_06_38_exp6\Miniscope1_XZ93';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ158_XZ157(m)\2022_06_13\13_54_46_sep\Miniscope2_XZ158';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ158_XZ157(m)\2022_06_13\14_05_34_toy\Miniscope2_XZ158';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ158_XZ157(m)\2022_06_13\14_16_36_exp\Miniscope2_XZ158\part1\part1';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ158_XZ157(m)\2022_06_13\14_16_36_exp\Miniscope2_XZ158\part2\part2';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ158_XZ157(m)\2022_06_13\14_37_01_exp\Miniscope2_XZ158';
+
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\Quadrant assay\DLX-DLX\XZ97_XZ93\2021_10_09\XZ93';
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\Shank3\DLX-DLX\XZ158_XZ157(m)\2022_06_13\XZ158\processed';
 fileName = cell(nVideo,1); fileName(:) = {'msvideo_dFF.avi'};
-F.ExperimentID = ['PairQD5_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairDS55_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -64,13 +63,13 @@ for i = 1:nVideo
        case 1
            load([msPath,'\ms_sep.mat']);
        case 2
-           load([msPath,'\ms_exp1.mat']);
+           load([msPath,'\ms_toy.mat']);
        case 3
-           load([msPath,'\ms_exp2.mat']);
+           load([msPath,'\ms_exp1.mat']);
        case 4
-           load([msPath,'\ms_exp3.mat']);
+           load([msPath,'\ms_exp2.mat']);
        case 5
-           load([msPath,'\ms_exp4.mat']);
+           load([msPath,'\ms_exp3.mat']);
        case 6
            load([msPath,'\ms_exp5.mat']);
        case 7

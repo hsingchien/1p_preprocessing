@@ -1,5 +1,5 @@
 %% Rectify allPair F structures
-Fversion = '20220516';
+Fversion = '20220614';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -232,7 +232,7 @@ for i = 1:length(allPairs)
 end
 %% recalculate pcc and save it in a map container
 cor_values = containers.Map();
-for i =1:length(allPairs)
+for i =14:length(allPairs)
     this_cor = [];
     PairID = ['Pair',num2str(i)];
     for k = 1:length(allPairs{i}{1}.MS)
@@ -249,7 +249,7 @@ for i =1:length(allPairs)
             continue;
         end
         minilen = min([length(filt1), length(filt2)]);
-        cor_value = corr(filt1(1080:minilen), filt2(1080:minilen));
+        cor_value = corr(filt1(1:minilen), filt2(1:minilen));
         this_cor = [this_cor, cor_value];
         fprintf(['Pair %d ', allPairs{i}{1}.videoInfo.session{k}, ' correlation is %4.4f\n'], i, cor_value);
         figure, plot(filt1(1:minilen),'r-'); hold on; plot(filt2(1:minilen),'b-');
@@ -261,10 +261,10 @@ end
 for i = 1:length(allPairs)
         for k = 1:length(allPairs{i}{1}.MS)
             if length(allPairs{i}{1}.TimeStamp.mapTs{k}.M1toM2) ~= size(allPairs{i}{2}.MS{k}.FiltTraces,1)
-                fprintf('Pair %d, session %d, M1toM2\n',i,k);
+                fprintf('Pair %d, session %d, M1toM2 by %d\n',i,k,abs(length(allPairs{i}{1}.TimeStamp.mapTs{k}.M1toM2)-size(allPairs{i}{2}.MS{k}.FiltTraces,1)));
             end
             if length(allPairs{i}{1}.TimeStamp.mapTs{k}.M2toM1) ~= size(allPairs{i}{1}.MS{k}.FiltTraces,1)
-                fprintf('Pair %d, session %d, M2toM1\n',i,k);
+                fprintf('Pair %d, session %d, M2toM1 by %d\n',i,k,abs(length(allPairs{i}{1}.TimeStamp.mapTs{k}.M2toM1)-size(allPairs{i}{1}.MS{k}.FiltTraces,1)));
             end
         end
 end         

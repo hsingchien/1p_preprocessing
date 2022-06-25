@@ -3,14 +3,18 @@ rTraces = ms.RawTraces;
 fTraces = ms.FiltTraces;
 sTraces = ms.S;
 % 7332 - 7338
-fstart = 26725;
-fend =26740;
+fstart = 6490;
+fend = 6500;
 rTraces(fstart:fend,:) = (rTraces(fend+1,:) - rTraces(fstart-1,:)) /(fend-fstart+1) .* transpose(1:(fend-fstart+1)) + rTraces(fstart-1,:);
 fTraces(fstart:fend,:) = (fTraces(fend+1,:) - fTraces(fstart-1,:)) /(fend-fstart+1) .* transpose(1:(fend-fstart+1)) + fTraces(fstart-1,:);
 sTraces(:,fstart:fend) = (sTraces(:,fend+1) - sTraces(:,fstart-1)) /(fend-fstart+1) .* (1:(fend-fstart+1) + sTraces(:,fstart-1));
+ms.RawTraces = rTraces;
+ms.FiltTraces = fTraces;
+ms.S = sTraces;
+
 %%
-startF = 11431;
-endF = 11433;
+startF = 598;
+endF = 634;
 
 increment = (double(vidmat(:,:,endF+1)) - double(vidmat(:,:,startF-1)))/(endF-startF+2);
 f = figure;
