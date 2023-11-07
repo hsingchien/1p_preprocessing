@@ -1,5 +1,5 @@
-%% Rectify allPair F structures
-Fversion = '20220916';
+%% Standardize allPair F structures
+Fversion = '20231024';
 for i = 1:length(allPairs)
     for j = 1:2
         allPairs{i}{j}.Fversion = Fversion;
@@ -10,7 +10,7 @@ end
 for i = 1:length(allPairs)
     M1 = allPairs{i}{1};
     M2 = allPairs{i}{2};
-    
+   
     M1Ts = M1.TimeStamp.Ts;
     M2Ts = M2.TimeStamp.Ts;
     
@@ -95,10 +95,13 @@ end
 all_behav_exp = {'attack','chasing','tussling','threaten','escape','defend',...
     'flinch','general-sniffing','sniff_face','sniff_genital','approach',...
     'follow','interaction', 'socialgrooming', 'mount','dig',...
-    'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'nesting','human_interfere', 'other'};
+    'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'punch','human_interfere', 'other'};
 all_behav_toy = {'attack', 'threaten', 'escape', 'flinch', 'defend', 'follow', 'attention', 'approach', 'general-sniffing',... 
     'mount', 'dig', 'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', ...
     'human_interfere', 'other'}; 
+all_behav_fem = {'attack', 'chasing', 'tussling', 'threaten', 'escape', 'defend','flinch','general-sniffing','sniff_face','sniff_female',...
+    'approach','follow','follow_female','socialgrooming','mount','dig','selfgrooming','climb','exploreobj','biteobj','stand',...
+    'punch','human_interfere','other'};
 
 for i = 1:length(allPairs)
     for j = 1:2
@@ -140,7 +143,10 @@ for i = 1:length(allPairs)
                     allPairs{i}{j}.Behavior{k}.EventNames{i2} = 'flinch';
                     fprintf('Pair %d has running instead of flinch\n', i);
                 end
-                
+                if ismember('sniff_female', allPairs{i}{j}.Behavior{k}.EventNames)
+                    all_behav = all_behav_fem;
+                end
+                 
                 % reorder
                 [i1,i2] = ismember(all_behav, allPairs{i}{j}.Behavior{k}.EventNames);
                 allPairs{i}{j}.Behavior{k}.EventNames = allPairs{i}{j}.Behavior{k}.EventNames(i2);
@@ -207,7 +213,7 @@ end
    %% display good cell number
 for i = 1:length(allPairs)
     for j = 1:2
-        fprintf('pair %d, animal %d, id %s cell %d\n', i, j, allPairs{i}{j}.AnimalID, sum(allPairs{i}{j}.MS{1}.goodCellVec));
+        fprintf('%s, animal %d, id %s cell %d\n', allPairs{i}{j}.ExperimentID, j, allPairs{i}{j}.AnimalID, sum(allPairs{i}{j}.MS{1}.goodCellVec));
     end
 end
 %% display genotypes
@@ -232,12 +238,19 @@ for i = 1:length(allPairs)
 end
 %% recalculate pcc and save it in a map container
 cor_values = containers.Map();
+
 for i =1:length(allPairs)
+
     this_cor = [];
-    PairID = ['Pair',num2str(i)];
+    PairID = allPairs{i}{1}.ExperimentID;
+    PairID = strsplit(PairID,'_');
+    PairID = PairID{1};
+    f = figure; t = tiledlayout(length(allPairs{i}{1}.MS),1,'TileSpacing','compact','Padding','tight');
     for k = 1:length(allPairs{i}{1}.MS)
         filt1 = mean(zscore(allPairs{i}{1}.MS{k}.FiltTraces(:,find(allPairs{i}{1}.MS{k}.goodCellVec))),2);
         filt2 = mean(zscore(allPairs{i}{2}.MS{k}.FiltTraces(:,find(allPairs{i}{2}.MS{k}.goodCellVec))),2);
+%         filt1 = mean(zscore(allPairs{i}{1}.MS{k}.FiltTraces),2);
+%         filt2 = mean(zscore(allPairs{i}{2}.MS{k}.FiltTraces),2);
         M1toM2 = allPairs{i}{1}.TimeStamp.mapTs{k}.M1toM2;
         M2toM1 = allPairs{i}{1}.TimeStamp.mapTs{k}.M2toM1;
         if length(M1toM2) > length(M2toM1)
@@ -248,13 +261,24 @@ for i =1:length(allPairs)
         if ~and(length(filt1) > 2000, length(filt2) > 2000)
             continue;
         end
+
         minilen = min([length(filt1), length(filt2)]);
-        cor_value = corr(filt1(901:minilen), filt2(901:minilen));
+        cor_value = corr(filt1(1:minilen), filt2(1:minilen));
+        cor_value2 = corr(filt1(901:minilen), filt2(901:minilen));
         this_cor = [this_cor, cor_value];
-        fprintf(['Pair %d ', allPairs{i}{1}.videoInfo.session{k}, ' correlation is %4.4f\n'], i, cor_value);
-        figure, plot(filt1(1:minilen),'r-'); hold on; plot(filt2(1:minilen),'b-');
-        title(['Pair ',num2str(i),'-', allPairs{i}{1}.videoInfo.session{k}]);
+        fprintf(['%s ', allPairs{i}{1}.videoInfo.session{k}, ' correlation is %4.4f\n'], PairID, cor_value);
+        nexttile(t);
+        plot(filt1(1:minilen),'r-'); hold on; plot(filt2(1:minilen),'b-');
+        legend({allPairs{i}{1}.AnimalID,allPairs{i}{2}.AnimalID});
+        title([PairID,'-', allPairs{i}{1}.videoInfo.session{k}]);
+        ax = gca; xmax = ax.XLim(2); 
+        text(xmax-1000, 1.7, ['full len PCC = ', num2str(cor_value)]);
+        text(xmax-1000, 1.3, ['remove 1min PCC = ', num2str(cor_value2)]);
+        ax.XLim(2) = xmax+1500; ax.YLim = [-1,2];
+
     end
+
+    f.Position = [100,100,1500,900]; %saveas(f,['mean_plots\',PairID,'.png'],'png');
     cor_values(PairID) = this_cor;
 end
 %% find timestamp mapping with different length than the timestamp of the ms
@@ -280,6 +304,7 @@ for i = 1:length(allPairs)
             end
         end
 end
+
 
             
 

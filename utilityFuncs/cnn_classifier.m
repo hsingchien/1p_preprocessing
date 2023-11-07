@@ -52,6 +52,11 @@ else
     out = predict(net_classifier,double(A_com));
     value = out(:,2);
     ind = (value >= thr);
+    try
+        delete classifier
+    catch ME
+        disp('failed deleting cnn classifier')
+    end
     
     
 end

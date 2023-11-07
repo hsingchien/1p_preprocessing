@@ -4,26 +4,26 @@ F = struct();
 MouseN = 2; % # in this pair, corresponding to the number in behavior annotation (usually 1 is the marked one if annotated by XZ)
 F.MouseN = MouseN;
 FPS = 15;
-nVideo = 3;
+nVideo = 2;
 No = transpose(1:nVideo);
-MouseID = cell(nVideo,1); MouseID(:) = {'TR185'}; 
+MouseID = cell(nVideo,1); MouseID(:) = {'XZ281'}; 
 % GenType = 'KO'; F.GenType = GenType;
-date = cell(nVideo,1); date(:) = {'20220327'};
-session = {'sep';'toy';'exp'};
-time = {'16_47_31';'16_57_36';'17_14_03'};
+CType = 'PV'; F.CType = CType;
+date = cell(nVideo,1); date(:) = {'20231019'};
+session = {'sep';'exp'};
+time = {'15_26_30';'15_37_16'};
 % path for timestamps
 filePath = {
-    'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2022_03_27_(AAV-PV)\TR185_TR170(m)\16_47_31_sep\Miniscope2_XZ185';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2022_03_27_(AAV-PV)\TR185_TR170(m)\16_57_36_toy\Miniscope2_XZ185';
-    'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2022_03_27_(AAV-PV)\TR185_TR170(m)\17_14_03_exp\Miniscope2_XZ185';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2023_10_19\XZ281_XZ264(m)\15_26_30_sep\Miniscope6_XZ281';
+    'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2023_10_19\XZ281_XZ264(m)\15_37_16_exp\Miniscope6_XZ281';
     };
 % path for ms file and concatenated videos
 % [~,ei] = regexp(filePath{1},'2021_\d*_\d*');
 % msPath = filePath{1};
 % msPath = [msPath(1:ei),'\',MouseID{1}];
-msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2022_03_27_(AAV-PV)\TR185_TR170(m)\TR185\processed';
+msPath = 'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2023_10_19\XZ281_XZ264(m)\XZ281\processed';
 fileName = cell(nVideo,1); fileName(:) = {'msvideo_dFF.avi'};
-F.ExperimentID = ['PairPV5_',date{1},'_F']; % change Pair#
+F.ExperimentID = ['PairPV40_',date{1},'_F']; % change Pair#
 F.ExperimentID
 tempstr = strsplit(F.ExperimentID,'_');
 
@@ -57,14 +57,14 @@ for i = 1:nVideo
    switch i
        case 1
            load([msPath,'\ms_sep.mat']);
+%        case 2
+%            load([msPath,'\ms_toy.mat']);
        case 2
-           load([msPath,'\ms_toy.mat']);
-       case 3
            load([msPath,'\ms_exp.mat']);
+       case 3
+           load([msPath,'\ms_exp2.mat']);
        case 4
            load([msPath,'\ms_exp2.mat']);
-       case 5
-           load([msPath,'\ms_exp3.mat']);
        case 6
            load([msPath,'\ms_exp5.mat']);
        case 7
@@ -140,13 +140,17 @@ end
 F.Annotation.annBD = Ac;
 F.Behavior = Behavior;
 %% add 'other' and reorder behavior field
-all_behav_exp = {'attack','chasing','tussling','threaten','escape','defend',...
-    'flinch','general-sniffing','sniff_face','sniff_genital','approach',...
-    'follow','interaction', 'socialgrooming', 'mount','dig',...
-    'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'nesting','human_interfere', 'other'};
+% all_behav_exp = {'attack','chasing','tussling','threaten','escape','defend',...
+%     'flinch','general-sniffing','sniff_face','sniff_genital','approach',...
+%     'follow','interaction', 'socialgrooming', 'mount','dig',...
+%     'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'nesting','human_interfere', 'other'};
 all_behav_toy = {'attack', 'threaten', 'escape', 'flinch', 'defend', 'follow', 'attention', 'approach', 'general-sniffing',... 
     'mount', 'dig', 'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', ...
     'human_interfere', 'other'};
+all_behav_exp = {'attack','chasing','tussling','threaten','escape','defend',...
+    'flinch','general-sniffing','sniff_face','sniff_female','approach',...
+    'follow','follow_female', 'socialgrooming', 'mount','dig',...
+    'selfgrooming', 'climb', 'exploreobj', 'biteobj', 'stand', 'punch','human_interfere', 'other'};
 
         for k = 1:length(F.Behavior)
             if contains(F.videoInfo.session{k},'toy')

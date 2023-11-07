@@ -50,7 +50,7 @@ for video_i = 1:ms.numFiles;
     % read data and convert to single
     Yf = read_file(name);
     Yf = single(Yf);
-    Yf = downsample_data(Yf,'space',1,ms.ds,1);
+%     Yf = downsample_data(Yf,'space',1,ms.ds,1);
     
     Y = imfilter(Yf,psf,'symmetric');
     [d1,d2,T] = size(Y);
@@ -79,7 +79,7 @@ for video_i = 1:ms.numFiles;
     if ~isempty(crop)
         ybound = min(size(Mr,1), crop(2)+crop(4)+1);
         xbound = min(size(Mr,2), crop(1)+crop(3)+1);
-        writeVideo(writerObj,uint8(Mr(crop(2)+1:ybound, crop(1)+1:xbound,:)));
+        writeVideo(writerObj,uint8(imresize(Mr(crop(2)+1:ybound, crop(1)+1:xbound,:),1/ms.ds,'Method','box')));
     else
         writeVideo(writerObj,uint8(Mr));
     end

@@ -7,18 +7,26 @@
 % Reject cells with CellScreener after this. 
 
 
-%% Set paths to your raw videos and options for normcorre and fft
+%% Set paths to your raw videos and options for                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     bbbbbdbbdbbbdbbdddddddddddddvbdvnormcorre and fft
 % IMPORTANT: Before you run, make sure the videos are visually consistent. 
 % Bad frames caused by miniscope failure should be removed before starting 
 % this script, otherwise CNMFE will throw errors.   
 RawInputDir = {
-'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2022_03_27_(AAV-PV)\TR185_TR170(m)\TR170';
-'E:\MiniscopeData(processed)\NewCage_free_dual\PV\2022_03_27_(AAV-PV)\TR185_TR170(m)\TR185'
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2021_12_16\TR168_TR166(m)\TR166';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2021_12_16\TR168_TR166(m)\TR168';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2022_01_04\XZ133_XZ126(m)\XZ126';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2022_01_04\XZ133_XZ126(m)\XZ133';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2022_02_16\TR166_XZ133(m)\TR166';
+% 'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2022_02_16\TR166_XZ133(m)\XZ133';
+
+'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2022_02_18\TR168_XZ133(m)\TR168';
+'E:\MiniscopeData(processed)\NewCage_free_dual\CMK_vs_CMK\Female\2022_02_18\TR168_XZ133(m)\XZ133'
+
 };
-downsample_ratio = 1;
+downsample_ratio = 2;
 isnonrigid = false;
-doNormCorre = true;
-doFFT = true; % set false if you want to skip FFT
+doNormCorre = false; 
+doFFT = true; % set false if yo want to skip FFT
 doCNMFE = true;
 CNMFE_on_raw = false; % set true if you want to run CNMFE on raw
 par_size = 6; % parpool size (parallel computing worker), change to smaller number, e.g. 4, if having out-of-memory problem. 
@@ -27,29 +35,31 @@ CNMFE_options = struct(...
 'Fs', 15,... % frame rate
 'tsub', 1,... % temporal downsampling factor
 'gSig', 3,... % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-'gSiz', 12,... % pixel, neuron diameter
+'gSiz', 15,... % pixel, neuron diameter 12
 'nk', 3,...
 ...% background model
 'bg_model', 'ring',... % model of the background {'ring', 'svd'(default), 'nmf'}
 'nb', 1,...             % number of background sources for each patch (only be used in SVD and NMF model)
-'ring_radius', 16,...  % when the ring model used, it is the radius of the ring used in the background model.
+'ring_radius', 16,...  % when the ring model used, it is the radius of the ring used in the background model. 16
 ...% merge
 'merge_thr', 0.65,...
-'merge_thr_spatial', [0.5,0.1,-Inf],...% thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
+'merge_thr_spatial', [0.2,0.2,-Inf],...% thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
 'dmin', 3,... % minimum distances between two neurons. it is used together with merge_thr
 ...% initialize
-'min_corr', 0.75,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
-'min_pnr', 10,... % minimum peak-to-noise ratio for a seeding pixel, cmk 18, gaba 12
+'min_corr', 0.7,... % minimum local correlation for a seeding pixel, default 0.8, cmk 0.75
+'min_pnr', 16,... % minimum peak-to-noise ratio for a seeding pixel, cmk 18, gaba 12
 ...% residual
-'min_corr_res', 0.7,... % cmk 0.7 gaba 0.7
-'min_pnr_res', 8); % cmk 16 gaba 10
+'min_corr_res', 0.5,... % cmk 0.7 gaba 0.7
+'min_pnr_res', 14); % cmk 16 gaba 10
 
 %% Start batch
 for i = 1:length(RawInputDir)
    tic;
-
-
    cd(RawInputDir{i});
+   if i>1
+       doNormCorre = true;
+   end
+
    %% motion correction
    if doNormCorre
        if isempty(gcp('nocreate'))
@@ -70,6 +80,7 @@ for i = 1:length(RawInputDir)
        disp('Skip FFT step, running CNMFE on raw video');
        vName = 'msvideo_corrected.avi'; % skip FFT, run CNMFE on motion corrected raw video
    else
+       %%
        disp('Generate FFT video...');
        vName = 'msvideo_dFF.avi';
        addpath 'C:\Program Files (x86)\Fiji.app\scripts'
@@ -79,7 +90,7 @@ for i = 1:length(RawInputDir)
        if FFT == 1
         if exist('IJM', 'var')
             if ~isempty(IJM)
-                fprintf(1, 'ImageJ is open\n')
+                fprintf(1, 'I vmageJ is open\n')
             else
                 ImageJ
             end
@@ -91,14 +102,21 @@ for i = 1:length(RawInputDir)
        v = VideoReader([videoPath,'\msvideo_corrected.avi']);
        nFrames = v.NumberOfFrames;
        [x, y] = size(read(v,1));
-       allFrame = zeros([x y]);
+%        allFrame = zeros([x y]);
+        
         nHalf = floor(nFrames/2);
+%         allFrame = zeros([x,y,nHalf]);
+        allFrame = zeros([x,y]);
         meanPix = zeros([1 nHalf]);
         tic
         for i = 1:nHalf
             tempMat = read(v, i*2);
             meanPix(i) = mean(tempMat, 'all');
             allFrame = allFrame + double(tempMat);
+%             allFrame(:,:,i) = tempMat;
+            if mod(i,1000) == 0
+                disp(i);
+            end
             if mod(i, round(nHalf/10)) == 0
                 fprintf(1, '.');
             end
@@ -107,6 +125,7 @@ for i = 1:length(RawInputDir)
         toc
 
         meanFrameRaw = allFrame / nHalf;
+%         meanFrameRaw = quantile(double(allFrame),0.01,3);
         meanPix = imresize(double(meanPix), [1 nFrames]);
         dFFinfo.meanPixSmooth1 = smoothdata(meanPix, 'movmean', 200);
         dFFinfo.meanPixSmooth2 = smoothdata(meanPix, 'movmean', 500);
@@ -223,7 +242,7 @@ for i = 1:length(RawInputDir)
 
         close(C);
         close(C2);
-            %% Generate report
+            % Generate report
         fig = figure(2);
         clf;
         subplot(5, 1, 1)
@@ -263,10 +282,11 @@ for i = 1:length(RawInputDir)
         end
 
         print(fig, '-dpng', '-r300', [videoPath, '\dFFsummary.png']);
-        %% Quit ImageJ
+        % Quit ImageJ
         ij.IJ.run("Quit","");
         clearvars -except RawInputDir downsample_ratio isnonrigid i doNormCorre doFFT doCNMFE vName CNMFE_options ms CNMFE_on_raw par_size;
         close all;
+        %%
    end
     %% CNMFE on FFT output
     if doCNMFE & exist('ms','var')

@@ -15,9 +15,9 @@ VideoCombine(pwd, 'b',1, true, 'avi');
 
 %% convert avi to seq
 
-seqName = 'behavior.seq';
+seqName = 'behavior_jpg.seq';
 aviName = 'behav_video.avi';
-seqIo([seqName],'frImgs',struct('codec','png'),'aviName',[aviName]);
+seqIo([seqName],'frImgs',struct('codec','jpg'),'aviName',[aviName]);
 
 %% annotate behavior
 behavior_annotator;

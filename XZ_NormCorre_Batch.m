@@ -31,7 +31,7 @@ ms = msGenerateVideoObj(pwd,'','avi');
 ms.analysis_time = analysis_time;
 ms.ds = spatial_downsampling;
 mkdir(strcat(pwd,separator,analysis_time));
-save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
+% save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
 %% 2 - Perform motion correction using NormCorre
 display('NormCorre-2: Motion correction');
 if exist('crop.csv')

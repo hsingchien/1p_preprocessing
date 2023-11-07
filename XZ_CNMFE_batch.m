@@ -183,7 +183,11 @@ save([ms.dirName separator 'ms.mat'],'ms','-v7.3');
 % SFPs, A, neuron contours, 
 % RawTraces, FiltTraces, C, raw signals of each neuron, stored in 
 %% OPTIONAL put ms into cnn classifier, adjust thereshold to do preliminary cleaning
-[label, scores] = cnn_classifier(ms, '', 0.03);
+try
+    [label, scores] = cnn_classifier(ms, '', 0.03);
+catch ME
+    label = ones(size(ms.FiltTraces,2),1) > 0;
+end
 ms.cell_label = label;
 if isfield(ms,'vidObj');
     ms = rmfield(ms, 'vidObj');

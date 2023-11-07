@@ -15,7 +15,7 @@ for i = 2:length(f)
     ms.FiltTraces = ms.FiltTraces(f(i-1)+1:f(i),:);
     ms.RawTraces = ms.RawTraces(f(i-1)+1:f(i),:);
     ms.S = ms.S(:,f(i-1)+1:f(i));
-    save(['ms_',num2str(i-1),'.mat'],'ms');
+    save(['ms_',num2str(i-1),'.mat'],'ms','-v7.3');
 end
 
 end
